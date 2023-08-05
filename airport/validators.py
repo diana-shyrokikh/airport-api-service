@@ -70,7 +70,8 @@ def validate_date_is_not_equal(
         second_date_field_name: str,
         first_date: datetime,
         second_date: datetime,
-        error_to_raise):
+        error_to_raise
+):
     if first_date == second_date:
         raise error_to_raise({
             f"{first_date_field_name}":
@@ -79,4 +80,16 @@ def validate_date_is_not_equal(
             f"{second_date_field_name}":
                 f"{first_date_field_name} & {second_date_field_name} "
                 f"shouldn't be the same",
+        })
+
+
+def validate_departure_arrival_date(
+        departure_date: datetime,
+        arrival_date: datetime,
+        error_to_raise
+):
+    if departure_date > arrival_date:
+        raise error_to_raise({
+            "departure_date":
+                "departure date should not be later than arrival date",
         })
