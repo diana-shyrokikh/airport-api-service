@@ -402,13 +402,13 @@ class Ticket(models.Model):
         Ticket.validate_seat_or_row(
             field_name="row",
             seat_or_row=self.row,
-            seats_or_rows=Flight.airplane.rows,
+            seats_or_rows=self.flight.airplane.rows,
             error_to_raise=ValidationError
         )
         Ticket.validate_seat_or_row(
             field_name="seat",
             seat_or_row=self.seat,
-            seats_or_rows=Flight.airplane.seats_in_rows,
+            seats_or_rows=self.flight.airplane.seats_in_rows,
             error_to_raise=ValidationError
         )
 
