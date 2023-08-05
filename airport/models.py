@@ -7,7 +7,7 @@ from airport.validators import (
     validate_name,
     validate_airplane_name,
     validate_date,
-    validate_date_is_not_equal
+    validate_date_is_not_equal, validate_source_and_destination_is_not_equal
 )
 from user.models import User
 
@@ -27,11 +27,12 @@ class Country(models.Model):
         choices=COUNTRY_CHOICES,
     )
 
+    class Meta:
+        verbose_name_plural = "countries"
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
-
-    def clean(self):
-        validate_name(name=self.name, error_to_raise=ValidationError)
 
     def save(
         self,
@@ -62,6 +63,7 @@ class City(models.Model):
 
     class Meta:
         unique_together = ("name", "country")
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -143,9 +145,35 @@ class Route(models.Model):
     def __str__(self):
         return f"{self.source} - {self.destination}"
 
+    def clean(self):
+        validate_source_and_destination_is_not_equal(
+            source_id=self.source.id,
+            destination_id=self.destination.id,
+            error_to_raise=ValidationError
+        )
+
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None
+    ):
+        self.full_clean()
+
+        return super().save(
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+        )
+
 
 class AirplaneType(models.Model):
     name = models.CharField(unique=True, max_length=63)
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -187,6 +215,7 @@ class Airplane(models.Model):
             ("rows", "seats_in_rows"),
             ("name", "airplane_type")
         ]
+        ordering = ["name"]
 
     def __str__(self) -> str:
         return f"{self.name} ({self.airplane_type})"
@@ -219,6 +248,7 @@ class Crew(models.Model):
 
     class Meta:
         unique_together = ("first_name", "last_name")
+        ordering = ["last_name"]
 
     @property
     def full_name(self) -> str:
@@ -327,6 +357,9 @@ class Order(models.Model):
         User, related_name="orders", on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ["created_at"]
+
     def __str__(self):
         return f"Order №{self.id}"
 
@@ -387,4 +420,3 @@ class Ticket(models.Model):
             using=None,
             update_fields=None
         )
-

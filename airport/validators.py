@@ -28,6 +28,18 @@ def validate_airplane_name(name: str, error_to_raise):
         })
 
 
+def validate_source_and_destination_is_not_equal(
+    source_id: int,
+    destination_id: int,
+    error_to_raise
+):
+    if source_id == destination_id:
+        raise error_to_raise({
+            "source": "Source and destination should not be the same",
+            "destination": "Destination and source should not be the same"
+        })
+
+
 def validate_date(
         field_name: str,
         date: datetime,
@@ -47,7 +59,10 @@ def validate_date_is_not_equal(
         error_to_raise):
     if first_date == second_date:
         raise error_to_raise({
-            f"{first_date_field_name} & {second_date_field_name}":
+            f"{first_date_field_name}":
                 f"{first_date_field_name} & {second_date_field_name} "
-                f"shouldn't be the same"
+                f"shouldn't be the same",
+            f"{second_date_field_name}":
+                f"{first_date_field_name} & {second_date_field_name} "
+                f"shouldn't be the same",
         })
