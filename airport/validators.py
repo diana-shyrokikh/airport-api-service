@@ -84,12 +84,12 @@ def validate_date_is_not_equal(
 
 
 def validate_departure_arrival_date(
-        departure_date: datetime,
-        arrival_date: datetime,
+        departure_time: datetime,
+        arrival_time: datetime,
         error_to_raise
 ):
-    if departure_date > arrival_date:
+    if departure_time > arrival_time:
         raise error_to_raise({
-            "departure_date":
-                "departure date should not be later than arrival date",
+            "departure_time":
+                "departure time should not be later than arrival time",
         })
