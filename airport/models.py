@@ -214,7 +214,6 @@ class Airplane(models.Model):
 
     class Meta:
         unique_together = [
-            ("rows", "seats_in_rows"),
             ("name", "airplane_type")
         ]
         ordering = ["name"]
@@ -377,6 +376,9 @@ class Ticket(models.Model):
     order = models.ForeignKey(
         Order, related_name="tickets", on_delete=models.CASCADE
     )
+
+    class Meta:
+        unique_together = ("row", "seat"),
 
     def __str__(self):
         return f"Ticket: row {self.row}, seat{self.seat}"
