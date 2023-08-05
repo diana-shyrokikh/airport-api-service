@@ -12,9 +12,6 @@ from airport.validators import (
 from user.models import User
 
 
-# from order_tickets.models import Ticket
-
-
 class Country(models.Model):
     COUNTRY_CHOICES = [
         (country.name, country.name)
