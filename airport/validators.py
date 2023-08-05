@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 
 
-NAME_PATTERN = r"^[A-Za-z]+$"
+NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
 AIRPLANE_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
 
 
