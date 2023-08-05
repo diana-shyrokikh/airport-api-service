@@ -1,0 +1,53 @@
+import re
+from datetime import datetime
+
+from django.utils import timezone
+
+
+NAME_PATTERN = r"^[A-Za-z]+$"
+AIRPLANE_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
+
+
+def validate_name(
+        name: str,
+        error_to_raise,
+        field_name: str = "name"
+):
+
+    if re.search(NAME_PATTERN, name) is None:
+        raise error_to_raise({
+            f"{field_name}": f"{name} should contain only english letters"
+        })
+
+
+def validate_airplane_name(name: str, error_to_raise):
+    if re.search(AIRPLANE_NAME_PATTERN, name) is None:
+        raise error_to_raise({
+            "name": f"{name} should contain english letters "
+                    f"with or without space and digits"
+        })
+
+
+def validate_date(
+        field_name: str,
+        date: datetime,
+        error_to_raise
+):
+    if timezone.now() > date:
+        raise error_to_raise({
+            f"{field_name}": f"{date} shouldn't be in the past"
+        })
+
+
+def validate_date_is_not_equal(
+        first_date_field_name: str,
+        second_date_field_name: str,
+        first_date: datetime,
+        second_date: datetime,
+        error_to_raise):
+    if first_date == second_date:
+        raise error_to_raise({
+            f"{first_date_field_name} & {second_date_field_name}":
+                f"{first_date_field_name} & {second_date_field_name} "
+                f"shouldn't be the same"
+        })
