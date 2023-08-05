@@ -382,7 +382,7 @@ class Ticket(models.Model):
         unique_together = ("row", "seat"),
 
     def __str__(self):
-        return f"Ticket: row {self.row}, seat{self.seat}"
+        return f"Ticket: row {self.row}, seat {self.seat}"
 
     @staticmethod
     def validate_seat_or_row(
