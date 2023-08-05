@@ -5,6 +5,7 @@ from django.utils import timezone
 
 
 NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
+AIRPORT_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s.()-/]+$"
 AIRPLANE_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
 
 
@@ -16,11 +17,24 @@ def validate_name(
 
     if re.search(NAME_PATTERN, name) is None:
         raise error_to_raise({
-            f"{field_name}": f"{name} should contain only english letters"
+            f"{field_name}": f"{name} should contain only english letters also spaces are allowed"
         })
 
 
-def validate_airplane_name(name: str, error_to_raise):
+def validate_airport_name(
+        name: str,
+        error_to_raise,
+        field_name: str = "name"
+):
+
+    if re.search(AIRPORT_NAME_PATTERN, name) is None:
+        raise error_to_raise({
+            f"{field_name}": f"{name} should contain english letters "
+                             f"also spaces, parentheses and symbols: - . /  are allowed"
+        })
+
+
+def validate_airplane(name: str, error_to_raise):
     if re.search(AIRPLANE_NAME_PATTERN, name) is None:
         raise error_to_raise({
             "name": f"{name} should contain english letters "

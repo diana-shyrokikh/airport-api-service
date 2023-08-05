@@ -5,9 +5,11 @@ from pycountry import countries
 
 from airport.validators import (
     validate_name,
-    validate_airplane_name,
+    validate_airplane,
     validate_date,
-    validate_date_is_not_equal, validate_source_and_destination_is_not_equal
+    validate_date_is_not_equal,
+    validate_source_and_destination_is_not_equal,
+    validate_airport_name
 )
 from user.models import User
 
@@ -40,7 +42,7 @@ class Country(models.Model):
     ):
         self.full_clean()
 
-        self.name = self.name.capitalize()
+        self.name = self.name.title().strip()
 
         return super().save(
             force_insert=False,
@@ -77,7 +79,7 @@ class City(models.Model):
     ):
         self.full_clean()
 
-        self.name = self.name.capitalize()
+        self.name = self.name.strip()
 
         return super().save(
             force_insert=False,
@@ -89,20 +91,20 @@ class City(models.Model):
 
 class Airport(models.Model):
     name = models.CharField(unique=True, max_length=63)
-    city = models.ForeignKey(
+    closest_big_city = models.ForeignKey(
         City,
         related_name="airports",
         on_delete=models.CASCADE
     )
 
     def __str__(self):
-        return f"{self.city} ({self.name})"
+        return f"{self.name} ({self.closest_big_city.name})"
 
     class Meta:
-        unique_together = ("name", "city")
+        unique_together = ("name", "closest_big_city")
 
     def clean(self):
-        validate_name(name=self.name, error_to_raise=ValidationError)
+        validate_airport_name(name=self.name, error_to_raise=ValidationError)
 
     def save(
         self,
@@ -113,7 +115,7 @@ class Airport(models.Model):
     ):
         self.full_clean()
 
-        self.name = self.name.capitalize()
+        self.name = self.name.title().strip()
 
         return super().save(
             force_insert=False,
@@ -125,12 +127,12 @@ class Airport(models.Model):
 
 class Route(models.Model):
     source = models.ForeignKey(
-        City,
+        Airport,
         related_name="routs_source",
         on_delete=models.CASCADE
     )
     destination = models.ForeignKey(
-        City,
+        Airport,
         related_name="routs_destination",
         on_delete=models.CASCADE
     )
@@ -140,7 +142,10 @@ class Route(models.Model):
         unique_together = ("source", "destination")
 
     def __str__(self):
-        return f"{self.source} - {self.destination}"
+        return (
+            f"{self.source.closest_big_city.name} "
+            f"- {self.destination.closest_big_city.name}"
+        )
 
     def clean(self):
         validate_source_and_destination_is_not_equal(
@@ -176,7 +181,7 @@ class AirplaneType(models.Model):
         return self.name
 
     def clean(self):
-        validate_name(name=self.name, error_to_raise=ValidationError)
+        validate_airplane(name=self.name, error_to_raise=ValidationError)
 
     def save(
         self,
@@ -187,7 +192,7 @@ class AirplaneType(models.Model):
     ):
         self.full_clean()
 
-        self.name = self.name.capitalize()
+        self.name = self.name.strip()
 
         return super().save(
             force_insert=False,
@@ -218,7 +223,7 @@ class Airplane(models.Model):
         return f"{self.name} ({self.airplane_type})"
 
     def clean(self):
-        validate_airplane_name(
+        validate_airplane(
             name=self.name, error_to_raise=ValidationError
         )
 
@@ -230,6 +235,8 @@ class Airplane(models.Model):
         update_fields=None
     ):
         self.full_clean()
+
+        self.name = self.name.strip()
 
         return super().save(
             force_insert=False,
@@ -275,8 +282,8 @@ class Crew(models.Model):
     ):
         self.full_clean()
 
-        self.first_name = self.first_name.capitalize()
-        self.last_name = self.last_name.capitalize()
+        self.first_name = self.first_name.title().strip()
+        self.last_name = self.last_name.title().strip()
 
         return super().save(
             force_insert=False,
