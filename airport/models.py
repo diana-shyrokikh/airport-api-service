@@ -9,7 +9,8 @@ from airport.validators import (
     validate_date,
     validate_date_is_not_equal,
     validate_source_and_destination_is_not_equal,
-    validate_airport_name
+    validate_airport_name,
+    validate_departure_arrival_date
 )
 from user.models import User
 
@@ -329,6 +330,11 @@ class Flight(models.Model):
             second_date_field_name="arrival_time",
             first_date=self.departure_time,
             second_date=self.arrival_time,
+            error_to_raise=ValidationError
+        )
+        validate_departure_arrival_date(
+            departure_time=self.departure_time,
+            arrival_time=self.arrival_time,
             error_to_raise=ValidationError
         )
 
