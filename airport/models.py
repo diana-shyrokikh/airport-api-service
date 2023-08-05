@@ -303,11 +303,6 @@ class Flight(models.Model):
         related_name="flights",
         on_delete=models.CASCADE
     )
-    ticket = models.ForeignKey(
-        to="Ticket",
-        related_name="flights",
-        on_delete=models.CASCADE
-    )
     crew = models.ManyToManyField(Crew, related_name="flights")
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
