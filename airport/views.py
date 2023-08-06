@@ -1,7 +1,5 @@
 from django.db.models import F
-from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
 
 from airport.get_ids import get_ids
 from airport.models import (
@@ -49,23 +47,11 @@ from airport.serializers import (
     CountryDetailSerializer,
 )
 
-
-class TwoSizePagination(PageNumberPagination):
-    page_size = 2
-    page_query_param = "page_size"
-    max_page_size = 100
-
-
-class FiveSizePagination(PageNumberPagination):
-    page_size = 5
-    page_size_query_param = "page_size"
-    max_page_size = 100
-
-
-class TenSizePagination(PageNumberPagination):
-    page_size = 10
-    page_query_param = "page_size"
-    max_page_size = 100
+from airport.paginations import (
+    TwoSizePagination,
+    FiveSizePagination,
+    TenSizePagination
+)
 
 
 class CountryView(viewsets.ModelViewSet):
