@@ -23,7 +23,7 @@ from airport.serializers import (
     CrewSerializer,
     FlightSerializer,
     OrderSerializer,
-    TicketSerializer,
+    TicketSerializer, CityListSerializer, CityDetailSerializer,
 )
 
 
@@ -35,6 +35,24 @@ class CountryView(viewsets.ModelViewSet):
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ["list", "detail"]:
+            queryset = City.objects.select_related("country")
+
+        return queryset
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.action == "list":
+            serializer_class = CityListSerializer
+        elif self.action == "retrieve":
+            serializer_class = CityDetailSerializer
+
+        return serializer_class
 
 
 class AirportView(viewsets.ModelViewSet):

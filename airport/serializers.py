@@ -22,15 +22,38 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = City
         fields = "__all__"
+
+
+class CityListSerializer(CitySerializer):
+    country = serializers.CharField(source="country.name")
+
+    class Meta:
+        model = City
+        fields = ("id", "name", "country")
+
+
+class CityDetailSerializer(CitySerializer):
+    country = CountrySerializer(many=False)
+
+    class Meta:
+        model = City
+        fields = ("id", "name", "country")
 
 
 class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
         fields = "__all__"
+
+
+# class AirportListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Airport
+#         fields = "__all__"
 
 
 class RouteSerializer(serializers.ModelSerializer):
