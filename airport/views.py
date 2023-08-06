@@ -45,6 +45,7 @@ from airport.serializers import (
     AirplaneTypeDetailSerializer,
     CountryListSerializer,
     CountryDetailSerializer,
+    TakenTicketsSerializer,
 )
 
 from airport.paginations import (
@@ -412,3 +413,8 @@ class TicketView(viewsets.ModelViewSet):
             serializer_class = TicketDetailSerializer
 
         return serializer_class
+
+
+class TakenTicketsView(viewsets.ModelViewSet):
+    queryset = Ticket.objects.filter(order__isnull=False)
+    serializer_class = TakenTicketsSerializer
