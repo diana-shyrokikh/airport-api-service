@@ -142,6 +142,13 @@ class Route(models.Model):
     class Meta:
         unique_together = ("source", "destination")
 
+    @property
+    def name(self):
+        return (
+            f"{self.source.closest_big_city.name} "
+            f"- {self.destination.closest_big_city.name}"
+        )
+
     def __str__(self):
         return (
             f"{self.source.closest_big_city.name} "
