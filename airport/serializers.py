@@ -220,6 +220,7 @@ class FlightListSerializer(FlightSerializer):
         source="airplane.airplane_capacity",
         read_only=True,
     )
+    tickets_available = serializers.IntegerField(read_only=True)
     crew = serializers.SlugRelatedField(
         slug_field="full_name",
         many=True,
@@ -236,8 +237,8 @@ class FlightListSerializer(FlightSerializer):
             "flight_duration",
             "departure_time",
             "arrival_time",
+            "tickets_available",
             "crew",
-            # "tickets_available"
         )
 
 
@@ -256,6 +257,7 @@ class FlightDetailSerializer(FlightListSerializer):
             "flight_duration",
             "departure_time",
             "arrival_time",
+            "tickets_available",
             "crew",
             "taken_places",
         )

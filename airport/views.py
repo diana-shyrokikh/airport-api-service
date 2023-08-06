@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import F, Count
 from rest_framework import viewsets
 
 from airport.get_ids import get_ids
@@ -313,7 +313,13 @@ class FlightView(viewsets.ModelViewSet):
             queryset = Flight.objects.prefetch_related("crew").select_related(
                 "route__destination__closest_big_city__country",
                 "route__source__closest_big_city__country",
-                "airplane__airplane_type")
+                "airplane__airplane_type").annotate(
+                tickets_available=(
+                        F("airplane__rows")
+                        * F("airplane__seats_in_rows")
+                        - Count("tickets")
+                )
+            )
 
         if departure_date:
             queryset = queryset.filter(departure_time__date=departure_date)
