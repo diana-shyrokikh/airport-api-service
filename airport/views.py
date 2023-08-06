@@ -298,6 +298,7 @@ class OrderView(viewsets.ModelViewSet):
 class TicketView(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
