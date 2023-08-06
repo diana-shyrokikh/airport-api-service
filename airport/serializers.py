@@ -209,6 +209,16 @@ class AirplaneSerializer(serializers.ModelSerializer):
         model = Airplane
         fields = "__all__"
 
+    def validate(self, attrs):
+        data = super(AirplaneSerializer, self).validate(attrs)
+
+        validate_airplane(
+            name=attrs["name"],
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
+
 
 class AirplaneListSerializer(AirplaneSerializer):
     airplane_type = serializers.CharField(source="airplane_type.name", read_only=True)
