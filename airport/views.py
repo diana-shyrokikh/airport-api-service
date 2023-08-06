@@ -156,6 +156,7 @@ class RouteView(viewsets.ModelViewSet):
 class AirplaneTypeView(viewsets.ModelViewSet):
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
