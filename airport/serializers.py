@@ -254,6 +254,22 @@ class CrewSerializer(serializers.ModelSerializer):
         model = Crew
         fields = "__all__"
 
+    def validate(self, attrs):
+        data = super(CrewSerializer, self).validate(attrs)
+
+        validate_name(
+            field_name="first_name",
+            name=attrs["first_name"],
+            error_to_raise=serializers.ValidationError
+        )
+        validate_name(
+            field_name="last_name",
+            name=attrs["last_name"],
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
+
 
 class CrewListSerializer(CrewSerializer):
     class Meta:
