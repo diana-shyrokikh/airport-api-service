@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 from airport.models import (
     Country,
@@ -46,10 +47,15 @@ from airport.serializers import (
     CountryDetailSerializer,
 )
 
+class FiveSizePagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 100
 
 class CountryView(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
