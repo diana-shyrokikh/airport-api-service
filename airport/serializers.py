@@ -50,19 +50,43 @@ class CityListSerializer(CitySerializer):
 
 class CityDetailSerializer(CitySerializer):
     country = CountrySerializer(many=False, read_only=True)
+    airports = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
 
     class Meta:
         model = City
-        fields = ("id", "name", "country")
+        fields = ("id", "name", "country", "airports")
+
+
+class AirportCityDetailSerializer(CitySerializer):
+    country = CountrySerializer(many=False, read_only=True)
+
+    class Meta:
+        model = City
+        fields = ("name", "country")
+
+
+class CountryCityDetailSerializer(CitySerializer):
+    airports = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
+
+    class Meta:
+        model = City
+        fields = ("name", "airports")
 
 
 class CountryDetailSerializer(CountrySerializer):
-    cities = CityListSerializer(many=True, read_only=True)
+    cities = CountryCityDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Country
-        fields = "__all__"
-
+        fields = ("id", "name", "cities")
 
 
 class AirportSerializer(serializers.ModelSerializer):
@@ -81,7 +105,7 @@ class AirportListSerializer(AirportSerializer):
 
 
 class AirportDetailSerializer(AirportSerializer):
-    closest_big_city = CityDetailSerializer(many=False, read_only=True)
+    closest_big_city = AirportCityDetailSerializer(many=False, read_only=True)
 
     class Meta:
         model = Airport
