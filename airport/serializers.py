@@ -113,6 +113,16 @@ class AirportSerializer(serializers.ModelSerializer):
         model = Airport
         fields = "__all__"
 
+    def validate(self, attrs):
+        data = super(AirportSerializer, self).validate(attrs)
+
+        validate_airport_name(
+            name=attrs["name"],
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
+
 
 class AirportListSerializer(AirportSerializer):
     closest_big_city = serializers.CharField(source="closest_big_city.name", read_only=True)
