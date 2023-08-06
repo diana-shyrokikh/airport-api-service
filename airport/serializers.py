@@ -146,6 +146,17 @@ class RouteSerializer(serializers.ModelSerializer):
         model = Route
         fields = "__all__"
 
+    def validate(self, attrs):
+        data = super(RouteSerializer, self).validate(attrs)
+
+        validate_source_and_destination_is_not_equal(
+            source_id=attrs["source"].id,
+            destination_id=attrs["destination"].id,
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
+
 
 class RouteListSerializer(RouteSerializer):
     source = serializers.CharField(source="source.name", read_only=True)
