@@ -65,8 +65,8 @@ class AirportView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
-            queryset = Airport.objects.select_related("closest_big_city")
+        if self.action != "destroy":
+            queryset = Airport.objects.select_related("closest_big_city__country")
 
         return queryset
 
