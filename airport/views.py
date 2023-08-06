@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -242,8 +243,25 @@ class AirplaneView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        name = self.request.query_params.get("name")
+        airplane_type = self.request.query_params.get("airplane_type")
+        capacity = self.request.query_params.get("capacity")
+
         if self.action != "destroy":
             queryset = Airplane.objects.select_related("airplane_type",)
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        if airplane_type:
+            queryset = queryset.filter(
+                airplane_type__name__icontains=airplane_type
+            )
+
+        if capacity:
+            queryset = queryset.annotate(
+                capacity=F("rows") * F("seats_in_rows")
+            ).filter(capacity=capacity)
 
         return queryset
 
