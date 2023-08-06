@@ -88,10 +88,10 @@ class RouteView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Route.objects.select_related(
                 "source__closest_big_city__country",
-                "destination__closest_big_city__country"
+                "destination__closest_big_city__country",
             )
 
         return queryset
@@ -119,7 +119,7 @@ class AirplaneView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Airplane.objects.select_related("airplane_type",)
 
         return queryset
@@ -142,7 +142,7 @@ class CrewView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Crew.objects.prefetch_related("flights",)
 
         return queryset
@@ -165,7 +165,7 @@ class FlightView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Flight.objects.prefetch_related("crew").select_related(
                 "route__destination__closest_big_city__country",
                 "route__source__closest_big_city__country",
@@ -201,7 +201,7 @@ class OrderView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Order.objects.prefetch_related(
                 "tickets__flight__route__destination__closest_big_city__country",
                 "tickets__flight__route__source__closest_big_city__country",
@@ -221,7 +221,7 @@ class TicketView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = Ticket.objects.select_related(
                 "order",
                 "flight__route__destination__closest_big_city__country",
@@ -240,4 +240,3 @@ class TicketView(viewsets.ModelViewSet):
             serializer_class = TicketDetailSerializer
 
         return serializer_class
-
