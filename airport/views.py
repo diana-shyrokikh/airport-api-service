@@ -54,6 +54,12 @@ class FiveSizePagination(PageNumberPagination):
     max_page_size = 100
 
 
+class TenSizePagination(PageNumberPagination):
+    page_size = 10
+    page_query_param = "page_size"
+    max_page_size = 100
+
+
 class CountryView(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
@@ -204,6 +210,8 @@ class AirplaneView(viewsets.ModelViewSet):
 class CrewView(viewsets.ModelViewSet):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
+    pagination_class = TenSizePagination
+
 
     def get_queryset(self):
         queryset = self.queryset
