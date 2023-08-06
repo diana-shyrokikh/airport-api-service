@@ -267,6 +267,7 @@ class FlightView(viewsets.ModelViewSet):
 class OrderView(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    pagination_class = TwoSizePagination
 
     def get_serializer_class(self):
         serializer_class = self.serializer_class
