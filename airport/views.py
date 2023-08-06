@@ -180,6 +180,7 @@ class AirplaneTypeView(viewsets.ModelViewSet):
 class AirplaneView(viewsets.ModelViewSet):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneSerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
