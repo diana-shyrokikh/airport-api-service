@@ -317,11 +317,32 @@ class FlightView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        departure_date = self.request.query_params.get("departure_date")
+        arrival_date = self.request.query_params.get("arrival_date")
+        to_city = self.request.query_params.get("to")
+        from_city = self.request.query_params.get("from")
+
         if self.action != "destroy":
             queryset = Flight.objects.prefetch_related("crew").select_related(
                 "route__destination__closest_big_city__country",
                 "route__source__closest_big_city__country",
                 "airplane__airplane_type")
+
+        if departure_date:
+            queryset = queryset.filter(departure_time__date=departure_date)
+
+        if arrival_date:
+            queryset = queryset.filter(arrival_time__date=arrival_date)
+
+        if to_city:
+            queryset = queryset.filter(
+                route__destination__closest_big_city_id=to_city
+            )
+
+        if from_city:
+            queryset = queryset.filter(
+                route__source__closest_big_city_id=from_city
+            )
 
         return queryset
 
