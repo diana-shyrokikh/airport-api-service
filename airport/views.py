@@ -375,12 +375,17 @@ class OrderView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        created_at_date = self.request.query_params.get("date")
+
         if self.action != "destroy":
             queryset = Order.objects.prefetch_related(
                 "tickets__flight__route__destination__closest_big_city__country",
                 "tickets__flight__route__source__closest_big_city__country",
                 "tickets__flight__airplane__airplane_type"
             )
+
+        if created_at_date:
+            queryset = queryset.filter(created_at__date=created_at_date)
 
         return queryset.filter(user=self.request.user)
 
