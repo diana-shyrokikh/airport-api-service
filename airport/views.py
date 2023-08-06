@@ -106,7 +106,7 @@ class CityView(viewsets.ModelViewSet):
         queryset = self.queryset
 
         name = self.request.query_params.get("name")
-        country_ids = self.request.query_params.get("country")
+        country_ids = self.request.query_params.get("countries")
 
         if self.action != "destroy":
             queryset = City.objects.select_related("country")
@@ -140,8 +140,8 @@ class AirportView(viewsets.ModelViewSet):
         queryset = self.queryset
 
         name = self.request.query_params.get("name")
-        country_ids = self.request.query_params.get("country")
-        city_ids = self.request.query_params.get("city")
+        country_ids = self.request.query_params.get("countries")
+        city_ids = self.request.query_params.get("cities")
 
         if self.action != "destroy":
             queryset = Airport.objects.select_related("closest_big_city__country")
@@ -401,6 +401,8 @@ class TicketView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        flight_ids = self.request.query_params.get("flights")
+
         if self.action != "destroy":
             queryset = Ticket.objects.select_related(
                 "order",
@@ -408,6 +410,10 @@ class TicketView(viewsets.ModelViewSet):
                 "flight__route__source__closest_big_city__country",
                 "flight__airplane__airplane_type"
             )
+
+        if flight_ids:
+            flight_ids = get_ids(flight_ids)
+            queryset = queryset.filter(flight__in=flight_ids)
 
         return queryset
 
