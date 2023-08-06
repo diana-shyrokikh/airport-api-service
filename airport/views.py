@@ -25,7 +25,8 @@ from airport.serializers import (
     OrderSerializer,
     TicketSerializer, CityListSerializer, CityDetailSerializer, AirportDetailSerializer, AirportListSerializer,
     RouteListSerializer, RouteDetailSerializer, AirplaneListSerializer, AirplaneDetailSerializer, CrewListSerializer,
-    CrewDetailSerializer, FlightListSerializer, FlightDetailSerializer,
+    CrewDetailSerializer, FlightListSerializer, FlightDetailSerializer, TicketListSerializer, TicketDetailSerializer,
+    OrderListSerializer, OrderDetailSerializer,
 )
 
 
@@ -188,10 +189,26 @@ class OrderView(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_serializer_class(self):
-        return self.serializer_class
+        serializer_class = self.serializer_class
+
+        if self.action == "list":
+            serializer_class = OrderListSerializer
+        elif self.action == "retrieve":
+            serializer_class = OrderDetailSerializer
+
+        return serializer_class
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        queryset = self.queryset
+
+        if self.action in ["list", "retrieve"]:
+            queryset = Order.objects.prefetch_related(
+                "tickets__flight__route__destination__closest_big_city__country",
+                "tickets__flight__route__source__closest_big_city__country",
+                "tickets__flight__airplane__airplane_type"
+            )
+
+        return queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -200,3 +217,27 @@ class OrderView(viewsets.ModelViewSet):
 class TicketView(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ["list", "retrieve"]:
+            queryset = Ticket.objects.select_related(
+                "order",
+                "flight__route__destination__closest_big_city__country",
+                "flight__route__source__closest_big_city__country",
+                "flight__airplane__airplane_type"
+            )
+
+        return queryset
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.action == "list":
+            serializer_class = TicketListSerializer
+        elif self.action == "retrieve":
+            serializer_class = TicketDetailSerializer
+
+        return serializer_class
+

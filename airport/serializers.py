@@ -185,7 +185,38 @@ class FlightDetailSerializer(FlightListSerializer):
         )
 
 
+class TicketFlightListSerializer(FlightSerializer):
+    route = serializers.CharField(source="route.name")
+    airplane_capacity = serializers.IntegerField(source="airplane.airplane_capacity")
+
+    class Meta:
+        model = Flight
+        fields = (
+            "route",
+            "airplane_capacity",
+            "flight_duration",
+            "departure_time",
+            "arrival_time",
+        )
+
+
 class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "flight")
+
+
+class TicketListSerializer(TicketSerializer):
+    flight = serializers.CharField(source="flight.route.name")
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "flight")
+
+
+class TicketDetailSerializer(TicketSerializer):
+    flight = TicketFlightListSerializer(many=False)
+
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat", "flight")
@@ -208,42 +239,18 @@ class OrderSerializer(serializers.ModelSerializer):
 
         return order
 
-# class TicketSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Ticket
-#         fields = ("id", "row", "seat", "flight")
-#
-#
-# class OrderSerializer(serializers.ModelSerializer):
-#     tickets = TicketSerializer(
-#         read_only=False,
-#         many=False,
-#         # allow_empty=False
-#     )
-#
-#     class Meta:
-#         model = Order
-#         fields = (
-#             "id",
-#             "tickets",
-#             "created_at",
-#             "user"
-#         )
-#
-#     def create(self, validated_data):
-#         with transaction.atomic():
-#             tickets_data = validated_data.pop("tickets")
-#             print(tickets_data)
-#             tickets_data["flight"] = tickets_data["flight"].id
-#             order = Order.objects.create(**validated_data)
-#             # ticket_data = tickets_data  # Remove this line since tickets_data is not a dictionary anymore
-#             # Ticket.objects.create(
-#             #     order=order,
-#             #     row=ticket_data["row"],  # Access the fields through the nested serializer
-#             #     seat=ticket_data["seat"],  # Access the fields through the nested serializer
-#             #     flight=ticket_data["flight"],  # Access the fields through the nested serializer
-#             # )
-#             ticket_serializer = TicketSerializer(data=tickets_data)
-#             ticket_serializer.is_valid(raise_exception=True)
-#             ticket_serializer.save(order=order)
-#             return order
+
+class OrderListSerializer(OrderSerializer):
+    tickets = TicketListSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ("id", "tickets", "created_at",)
+
+
+class OrderDetailSerializer(OrderSerializer):
+    tickets = TicketDetailSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ("id", "tickets", "created_at",)
