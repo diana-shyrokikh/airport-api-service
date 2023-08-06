@@ -74,8 +74,13 @@ class CountryView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
-        if self.action in ["list", "retrieve"]:
+        name = self.request.query_params.get("name")
+
+        if self.action != "destroy":
             queryset = Country.objects.prefetch_related("cities")
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
 
         return queryset
 
