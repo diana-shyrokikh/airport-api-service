@@ -181,19 +181,7 @@ class AirplaneTypeAirplaneListSerializer(AirplaneSerializer):
         fields = ("name", "rows", "seats_in_rows", "airplane_capacity")
 
 
-class AirplaneDetailSerializer(AirplaneSerializer):
-    airplane_type = AirplaneTypeSerializer(many=False, read_only=True)
 
-    class Meta:
-        model = Airplane
-        fields = (
-            "id",
-            "name",
-            "airplane_type",
-            "rows",
-            "seats_in_rows",
-            "airplane_capacity",
-        )
 
 
 class AirplaneTypeDetailSerializer(AirplaneTypeSerializer):
@@ -267,6 +255,35 @@ class FlightDetailSerializer(FlightListSerializer):
             "departure_time",
             "arrival_time",
             "crew"
+        )
+
+
+class AirplaneFlightDetailSerializer(FlightListSerializer):
+    class Meta:
+        model = Flight
+        fields = (
+            "id",
+            "route",
+            "flight_duration",
+            "departure_time",
+            "arrival_time",
+        )
+
+
+class AirplaneDetailSerializer(AirplaneSerializer):
+    airplane_type = AirplaneTypeSerializer(many=False, read_only=True)
+    flights = AirplaneFlightDetailSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Airplane
+        fields = (
+            "id",
+            "name",
+            "airplane_type",
+            "rows",
+            "seats_in_rows",
+            "airplane_capacity",
+            "flights"
         )
 
 
