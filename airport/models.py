@@ -226,6 +226,10 @@ class Airplane(models.Model):
         ]
         ordering = ["name"]
 
+    @property
+    def airplane_capacity(self):
+        return self.rows * self.seats_in_rows
+
     def __str__(self) -> str:
         return f"{self.name} ({self.airplane_type})"
 
