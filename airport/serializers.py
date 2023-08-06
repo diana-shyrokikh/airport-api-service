@@ -204,12 +204,6 @@ class CrewListSerializer(CrewSerializer):
         fields = ("id", "full_name")
 
 
-class CrewDetailSerializer(CrewSerializer):
-    class Meta:
-        model = Crew
-        fields = ("id", "first_name", "last_name", "full_name")
-
-
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
@@ -258,7 +252,7 @@ class FlightDetailSerializer(FlightListSerializer):
         )
 
 
-class AirplaneFlightDetailSerializer(FlightListSerializer):
+class MiniFlightDetailSerializer(FlightListSerializer):
     class Meta:
         model = Flight
         fields = (
@@ -272,7 +266,7 @@ class AirplaneFlightDetailSerializer(FlightListSerializer):
 
 class AirplaneDetailSerializer(AirplaneSerializer):
     airplane_type = AirplaneTypeSerializer(many=False, read_only=True)
-    flights = AirplaneFlightDetailSerializer(many=True, read_only=True)
+    flights = MiniFlightDetailSerializer(many=True, read_only=True)
 
     class Meta:
         model = Airplane
@@ -285,6 +279,14 @@ class AirplaneDetailSerializer(AirplaneSerializer):
             "airplane_capacity",
             "flights"
         )
+
+
+class CrewDetailSerializer(CrewSerializer):
+    flights = MiniFlightDetailSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Crew
+        fields = ("id", "first_name", "last_name", "flights")
 
 
 class TicketFlightListSerializer(FlightSerializer):
