@@ -395,7 +395,7 @@ class Ticket(models.Model):
     )
 
     class Meta:
-        unique_together = ("row", "seat"),
+        unique_together = ("row", "seat", "flight"),
 
     def __str__(self):
         return f"Ticket: row {self.row}, seat {self.seat}"
@@ -411,7 +411,7 @@ class Ticket(models.Model):
             raise error_to_raise({
                 f"{field_name}":
                     f"{seat_or_row} must be "
-                    f"in range (1, {seats_or_rows}"
+                    f"in range (1, {seats_or_rows})"
             })
 
     def clean(self):
