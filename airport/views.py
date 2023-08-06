@@ -47,10 +47,12 @@ from airport.serializers import (
     CountryDetailSerializer,
 )
 
+
 class FiveSizePagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = "page_size"
     max_page_size = 100
+
 
 class CountryView(viewsets.ModelViewSet):
     queryset = Country.objects.all()
@@ -75,9 +77,11 @@ class CountryView(viewsets.ModelViewSet):
 
         return serializer_class
 
+
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
