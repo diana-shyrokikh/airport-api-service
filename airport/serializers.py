@@ -50,10 +50,21 @@ class AirportSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# class AirportListSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Airport
-#         fields = "__all__"
+class AirportListSerializer(AirportSerializer):
+    closest_big_city = serializers.CharField(source="closest_big_city.name")
+    country = serializers.CharField(source="closest_big_city.country.name")
+
+    class Meta:
+        model = Airport
+        fields = ("id", "name", "closest_big_city", "country")
+
+
+class AirportDetailSerializer(AirportSerializer):
+    closest_big_city = CityDetailSerializer(many=False)
+
+    class Meta:
+        model = Airport
+        fields = ("id", "name", "closest_big_city")
 
 
 class RouteSerializer(serializers.ModelSerializer):
