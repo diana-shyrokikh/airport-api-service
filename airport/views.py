@@ -23,10 +23,27 @@ from airport.serializers import (
     CrewSerializer,
     FlightSerializer,
     OrderSerializer,
-    TicketSerializer, CityListSerializer, CityDetailSerializer, AirportDetailSerializer, AirportListSerializer,
-    RouteListSerializer, RouteDetailSerializer, AirplaneListSerializer, AirplaneDetailSerializer, CrewListSerializer,
-    CrewDetailSerializer, FlightListSerializer, FlightDetailSerializer, TicketListSerializer, TicketDetailSerializer,
-    OrderListSerializer, OrderDetailSerializer, AirplaneTypeListSerializer, AirplaneTypeDetailSerializer,
+    TicketSerializer,
+    CityListSerializer,
+    CityDetailSerializer,
+    AirportDetailSerializer,
+    AirportListSerializer,
+    RouteListSerializer,
+    RouteDetailSerializer,
+    AirplaneListSerializer,
+    AirplaneDetailSerializer,
+    CrewListSerializer,
+    CrewDetailSerializer,
+    FlightListSerializer,
+    FlightDetailSerializer,
+    TicketListSerializer,
+    TicketDetailSerializer,
+    OrderListSerializer,
+    OrderDetailSerializer,
+    AirplaneTypeListSerializer,
+    AirplaneTypeDetailSerializer,
+    CountryListSerializer,
+    CountryDetailSerializer,
 )
 
 
@@ -34,6 +51,23 @@ class CountryView(viewsets.ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ["list", "retrieve"]:
+            queryset = Country.objects.prefetch_related("cities")
+
+        return queryset
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.action == "list":
+            serializer_class = CountryListSerializer
+        elif self.action == "retrieve":
+            serializer_class = CountryDetailSerializer
+
+        return serializer_class
 
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -128,6 +162,7 @@ class AirplaneTypeView(viewsets.ModelViewSet):
             serializer_class = AirplaneTypeDetailSerializer
 
         return serializer_class
+
 
 class AirplaneView(viewsets.ModelViewSet):
     queryset = Airplane.objects.all()
