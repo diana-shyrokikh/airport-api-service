@@ -25,7 +25,7 @@ from airport.serializers import (
     OrderSerializer,
     TicketSerializer, CityListSerializer, CityDetailSerializer, AirportDetailSerializer, AirportListSerializer,
     RouteListSerializer, RouteDetailSerializer, AirplaneListSerializer, AirplaneDetailSerializer, CrewListSerializer,
-    CrewDetailSerializer,
+    CrewDetailSerializer, FlightListSerializer, FlightDetailSerializer,
 )
 
 
@@ -160,6 +160,27 @@ class CrewView(viewsets.ModelViewSet):
 class FlightView(viewsets.ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ["list", "retrieve"]:
+            queryset = Flight.objects.prefetch_related("crew").select_related(
+                "route__destination__closest_big_city__country",
+                "route__source__closest_big_city__country",
+                "airplane__airplane_type")
+
+        return queryset
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+
+        if self.action == "list":
+            serializer_class = FlightListSerializer
+        elif self.action == "retrieve":
+            serializer_class = FlightDetailSerializer
+
+        return serializer_class
 
 
 class OrderView(viewsets.ModelViewSet):
