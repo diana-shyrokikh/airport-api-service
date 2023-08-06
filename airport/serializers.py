@@ -289,21 +289,6 @@ class CrewDetailSerializer(CrewSerializer):
         fields = ("id", "first_name", "last_name", "flights")
 
 
-class TicketFlightListSerializer(FlightSerializer):
-    route = serializers.CharField(source="route.name", read_only=True)
-    airplane_capacity = serializers.IntegerField(source="airplane.airplane_capacity", read_only=True)
-
-    class Meta:
-        model = Flight
-        fields = (
-            "route",
-            "airplane_capacity",
-            "flight_duration",
-            "departure_time",
-            "arrival_time",
-        )
-
-
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
@@ -319,7 +304,7 @@ class TicketListSerializer(TicketSerializer):
 
 
 class TicketDetailSerializer(TicketSerializer):
-    flight = TicketFlightListSerializer(many=False, read_only=True)
+    flight = MiniFlightDetailSerializer(many=False, read_only=True)
 
     class Meta:
         model = Ticket
