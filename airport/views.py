@@ -213,8 +213,13 @@ class AirplaneTypeView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        name = self.request.query_params.get("name")
+
         if self.action != "destroy":
             queryset = AirplaneType.objects.prefetch_related("airplanes",)
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
 
         return queryset
 
