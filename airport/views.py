@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
+from airport.get_ids import get_ids
 from airport.models import (
     Country,
     City,
@@ -106,13 +107,14 @@ class CityView(viewsets.ModelViewSet):
         name = self.request.query_params.get("name")
         country_ids = self.request.query_params.get("country")
 
-        if self.action in ["list", "retrieve"]:
+        if self.action != "destroy":
             queryset = City.objects.select_related("country")
 
         if name:
             queryset = queryset.filter(name__icontains=name)
 
         if country_ids:
+            country_ids = get_ids(country_ids)
             queryset = queryset.filter(country__in=country_ids)
 
         return queryset
@@ -136,8 +138,23 @@ class AirportView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
 
+        name = self.request.query_params.get("name")
+        country_ids = self.request.query_params.get("country")
+        city_ids = self.request.query_params.get("city")
+
         if self.action != "destroy":
             queryset = Airport.objects.select_related("closest_big_city__country")
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        if country_ids:
+            country_ids = get_ids(country_ids)
+            queryset = queryset.filter(country__in=country_ids)
+
+        if city_ids:
+            city_ids = get_ids(city_ids)
+            queryset = queryset.filter(closest_big_city__in=city_ids)
 
         return queryset
 
