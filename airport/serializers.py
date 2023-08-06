@@ -13,6 +13,15 @@ from airport.models import (
     Order,
     Ticket,
 )
+from airport.validators import (
+    validate_name,
+    validate_airplane,
+    validate_date,
+    validate_date_is_not_equal,
+    validate_source_and_destination_is_not_equal,
+    validate_airport_name,
+    validate_departure_arrival_date
+)
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -38,6 +47,16 @@ class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = "__all__"
+
+    def validate(self, attrs):
+        data = super(CitySerializer, self).validate(attrs)
+
+        validate_name(
+            name=attrs["name"],
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
 
 
 class CityListSerializer(CitySerializer):
