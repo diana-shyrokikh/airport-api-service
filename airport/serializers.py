@@ -125,6 +125,18 @@ class CrewSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CrewListSerializer(CrewSerializer):
+    class Meta:
+        model = Crew
+        fields = ("id", "full_name")
+
+
+class CrewDetailSerializer(CrewSerializer):
+    class Meta:
+        model = Crew
+        fields = ("id", "first_name", "last_name", "full_name")
+
+
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
