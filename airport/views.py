@@ -129,6 +129,7 @@ class AirportView(viewsets.ModelViewSet):
 class RouteView(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
+    pagination_class = FiveSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
