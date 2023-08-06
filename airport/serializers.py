@@ -282,6 +282,34 @@ class FlightSerializer(serializers.ModelSerializer):
         model = Flight
         fields = "__all__"
 
+    def validate(self, attrs):
+        data = super(FlightSerializer, self).validate(attrs)
+
+        validate_date(
+            field_name="departure_time",
+            date=attrs["departure_time"],
+            error_to_raise=serializers.ValidationError
+        )
+        validate_date(
+            field_name="arrival_time",
+            date=attrs["arrival_time"],
+            error_to_raise=serializers.ValidationError
+        )
+        validate_date_is_not_equal(
+            first_date_field_name="departure_time",
+            second_date_field_name="arrival_time",
+            first_date=attrs["departure_time"],
+            second_date=attrs["arrival_time"],
+            error_to_raise=serializers.ValidationError
+        )
+        validate_departure_arrival_date(
+            departure_time=attrs["departure_time"],
+            arrival_time=attrs["arrival_time"],
+            error_to_raise=serializers.ValidationError
+        )
+
+        return data
+
 
 class TakenTicketsSerializer(serializers.ModelSerializer):
     class Meta:
