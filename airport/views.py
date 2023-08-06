@@ -48,6 +48,12 @@ from airport.serializers import (
 )
 
 
+class TwoSizePagination(PageNumberPagination):
+    page_size = 2
+    page_query_param = "page_size"
+    max_page_size = 100
+
+
 class FiveSizePagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = "page_size"
@@ -212,7 +218,6 @@ class CrewView(viewsets.ModelViewSet):
     serializer_class = CrewSerializer
     pagination_class = TenSizePagination
 
-
     def get_queryset(self):
         queryset = self.queryset
 
@@ -235,6 +240,7 @@ class CrewView(viewsets.ModelViewSet):
 class FlightView(viewsets.ModelViewSet):
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
+    pagination_class = TwoSizePagination
 
     def get_queryset(self):
         queryset = self.queryset
