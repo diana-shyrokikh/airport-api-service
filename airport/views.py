@@ -209,6 +209,31 @@ class AirportView(
 
         return serializer_class
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "name",
+                type=str,
+                description="Filter by name (ex. ?name=name)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "countries",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by countries id (ex. ?countries=1,2)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "cities",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by cities id (ex. ?cities=3,4)",
+                required=False,
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class RouteView(
     mixins.ListModelMixin,
