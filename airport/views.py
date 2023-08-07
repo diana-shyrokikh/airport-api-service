@@ -256,10 +256,17 @@ class AirplaneTypeView(
         return serializer_class
 
 
-class AirplaneView(viewsets.ModelViewSet):
+class AirplaneView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Airplane.objects.all()
     serializer_class = AirplaneSerializer
     pagination_class = FiveSizePagination
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
 
     def get_queryset(self):
         queryset = self.queryset
