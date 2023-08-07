@@ -615,6 +615,19 @@ class OrderView(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "date",
+                type=datetime,
+                description="Filter by created date (ex. ?date=year-month-day)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class TicketView(
     mixins.ListModelMixin,
