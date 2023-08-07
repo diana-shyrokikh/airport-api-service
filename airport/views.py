@@ -394,6 +394,31 @@ class AirplaneView(
 
         return serializer_class
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "name",
+                type=str,
+                description="Filter by name (ex. ?name=name)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "airplane type",
+                type=str,
+                description="Filter by airplane type (ex. ?airplane_type=name)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "capacity",
+                type=int,
+                description="Filter by capacity (ex. ?capacity=500)",
+                required=False,
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class CrewView(
     mixins.ListModelMixin,
