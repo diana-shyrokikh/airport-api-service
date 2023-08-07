@@ -39,3 +39,27 @@ class CityModelTests(TestCase):
             with self.assertRaises(ValidationError):
                 City.objects.create(name=name, country=self.country)
 
+
+class AirportModelTests(TestCase):
+    def setUp(self) -> None:
+        self.country = Country.objects.create(name="Ukraine")
+        self.city = City.objects.create(name="Kyiv", country=self.country)
+
+    def test_city_str(self):
+        airport = Airport.objects.create(
+            name="Test-Airport/International(TestTest)",
+            closest_big_city=self.city,
+        )
+
+        self.assertEqual(
+            f"{airport.name} ({airport.closest_big_city.name})",
+            str(airport)
+        )
+
+    def test_validate_airport_name(self):
+        invalid_names = ["   ", "123Test", ".,", "Test_"]
+
+        for name in invalid_names:
+            with self.assertRaises(ValidationError):
+                Airport.objects.create(name=name, closest_big_city=self.city)
+
