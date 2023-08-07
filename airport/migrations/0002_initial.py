@@ -104,6 +104,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name="airplane",
-            unique_together={("name", "airplane_type"), ("rows", "seats_in_rows")},
+            unique_together={("name", "airplane_type"), ("rows", "seats_in_row")},
         ),
     ]

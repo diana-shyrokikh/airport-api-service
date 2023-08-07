@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=63, unique=True)),
                 ("rows", models.PositiveIntegerField()),
-                ("seats_in_rows", models.PositiveIntegerField()),
+                ("seats_in_row", models.PositiveIntegerField()),
             ],
         ),
         migrations.CreateModel(
