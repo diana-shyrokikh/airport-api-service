@@ -1,5 +1,5 @@
 from django.db.models import F, Count
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 
 from airport.get_ids import get_ids
 from airport.models import (
@@ -53,12 +53,19 @@ from airport.paginations import (
     FiveSizePagination,
     TenSizePagination
 )
+from user.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 
-class CountryView(viewsets.ModelViewSet):
+class CountryView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
     pagination_class = FiveSizePagination
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
 
     def get_queryset(self):
         queryset = self.queryset
