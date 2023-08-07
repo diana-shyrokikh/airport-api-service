@@ -13,9 +13,11 @@ from airport.models import (
     Ticket,
 )
 
+
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
+
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
@@ -23,9 +25,20 @@ class CityAdmin(admin.ModelAdmin):
     list_filter = ["country"]
 
 
-admin.site.register(Airport)
-admin.site.register(Route)
-admin.site.register(AirplaneType)
+@admin.register(Airport)
+class AirportAdmin(admin.ModelAdmin):
+    list_display = ["id", "name", "closest_big_city"]
+
+
+@admin.register(Route)
+class RouteAdmin(admin.ModelAdmin):
+    list_display = ["id", "source", "destination"]
+
+
+@admin.register(AirplaneType)
+class AirplaneTypeAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]
+
 admin.site.register(Airplane)
 admin.site.register(Crew)
 admin.site.register(Flight)
