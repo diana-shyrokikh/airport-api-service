@@ -277,6 +277,25 @@ class RouteView(
 
         return serializer_class
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "source",
+                type=str,
+                description="Filter by source (ex. ?source=name)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "destination",
+                type=str,
+                description="Filter by destination (ex. ?destination=name)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class AirplaneTypeView(
     mixins.ListModelMixin,
