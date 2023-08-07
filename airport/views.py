@@ -459,6 +459,25 @@ class CrewView(
 
         return serializer_class
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "first name",
+                type=str,
+                description="Filter by first name (ex. ?first_name=name)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "last name",
+                type=str,
+                description="Filter by last name (ex. ?last_name=name)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class FlightView(
     mixins.ListModelMixin,
