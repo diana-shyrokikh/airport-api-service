@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.db.models import F, Count
+from django.template.defaultfilters import date
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
@@ -462,13 +465,13 @@ class CrewView(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                "first name",
+                "first_name",
                 type=str,
                 description="Filter by first name (ex. ?first_name=name)",
                 required=False,
             ),
             OpenApiParameter(
-                "last name",
+                "last_name",
                 type=str,
                 description="Filter by last name (ex. ?last_name=name)",
                 required=False,
@@ -538,6 +541,37 @@ class FlightView(
             serializer_class = FlightDetailSerializer
 
         return serializer_class
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "departure_date",
+                type=datetime,
+                description="Filter by departure date (ex. ?departure_date=year-month-day)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "arrival_date",
+                type=datetime,
+                description="Filter by arrival date (ex. ?arrival_date=year-month-day)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "to",
+                type=int,
+                description="Filter by destination city (ex. ?to=1)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "from",
+                type=int,
+                description="Filter by source city (ex. ?from=1)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class OrderView(
