@@ -1,4 +1,5 @@
 from django.db.models import F, Count
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
@@ -90,6 +91,19 @@ class CountryView(
             serializer_class = CountryDetailSerializer
 
         return serializer_class
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "name",
+                type=str,
+                description="Filter by name (ex. ?name=name)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class CityView(
