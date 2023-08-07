@@ -131,10 +131,16 @@ class CityView(
         return serializer_class
 
 
-class AirportView(viewsets.ModelViewSet):
+class AirportView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     pagination_class = FiveSizePagination
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
 
     def get_queryset(self):
         queryset = self.queryset
