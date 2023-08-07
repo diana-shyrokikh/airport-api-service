@@ -66,5 +66,22 @@ class FlightAdmin(admin.ModelAdmin):
         "arrival_time"
     ]
 
-admin.site.register(Order)
-admin.site.register(Ticket)
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "created_at",
+        "user"
+    ]
+
+
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "row",
+        "seat",
+        "order",
+        "flight"
+    ]
