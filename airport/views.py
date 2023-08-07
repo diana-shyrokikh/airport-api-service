@@ -448,10 +448,16 @@ class OrderView(
         serializer.save(user=self.request.user)
 
 
-class TicketView(viewsets.ModelViewSet):
+class TicketView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     pagination_class = FiveSizePagination
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self):
         queryset = self.queryset
