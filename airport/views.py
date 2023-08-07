@@ -304,10 +304,17 @@ class AirplaneView(
         return serializer_class
 
 
-class CrewView(viewsets.ModelViewSet):
+class CrewView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
     pagination_class = TenSizePagination
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
 
     def get_queryset(self):
         queryset = self.queryset
