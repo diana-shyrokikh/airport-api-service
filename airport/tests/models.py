@@ -45,7 +45,7 @@ class AirportModelTests(TestCase):
         self.country = Country.objects.create(name="Ukraine")
         self.city = City.objects.create(name="Kyiv", country=self.country)
 
-    def test_city_str(self):
+    def test_airport_str(self):
         airport = Airport.objects.create(
             name="Test-Airport/International(TestTest)",
             closest_big_city=self.city,
@@ -75,7 +75,7 @@ class RouteModelTests(TestCase):
         self.airport1 = Airport.objects.create(name="FirstTestAirport", closest_big_city=self.city1)
         self.airport2 = Airport.objects.create(name="SecondTestAirport", closest_big_city=self.city2)
 
-    def test_city_str(self):
+    def test_route_str(self):
         route = Route.objects.create(
             source=self.airport1,
             destination=self.airport2,
@@ -95,4 +95,21 @@ class RouteModelTests(TestCase):
                 destination=self.airport1,
                 distance=1000
             )
+
+
+class AirplaneTypeModelTests(TestCase):
+    def test_airplane_type_str(self):
+        airplane_type = AirplaneType.objects.create(
+            name="TestAirplaneType AT28",
+        )
+
+        self.assertEqual(airplane_type.name, str(airplane_type))
+
+    def test_validate_airplane(self):
+        invalid_names = ["   ", "123Test", ".,", "Test_"]
+
+        for name in invalid_names:
+            with self.assertRaises(ValidationError):
+                AirplaneType.objects.create(name=name)
+
 
