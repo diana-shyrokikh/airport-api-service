@@ -63,3 +63,36 @@ class AirportModelTests(TestCase):
             with self.assertRaises(ValidationError):
                 Airport.objects.create(name=name, closest_big_city=self.city)
 
+
+class RouteModelTests(TestCase):
+    def setUp(self) -> None:
+        self.country1 = Country.objects.create(name="Ukraine")
+        self.country2 = Country.objects.create(name="Italy")
+
+        self.city1 = City.objects.create(name="Kyiv", country=self.country1)
+        self.city2 = City.objects.create(name="Rome", country=self.country2)
+
+        self.airport1 = Airport.objects.create(name="FirstTestAirport", closest_big_city=self.city1)
+        self.airport2 = Airport.objects.create(name="SecondTestAirport", closest_big_city=self.city2)
+
+    def test_city_str(self):
+        route = Route.objects.create(
+            source=self.airport1,
+            destination=self.airport2,
+            distance=5000,
+        )
+
+        string = (
+            f"{route.source.closest_big_city.name} "
+            f"- {route.destination.closest_big_city.name}"
+        )
+        self.assertEqual(string, str(route))
+
+    def test_validate_source_and_destination_is_not_equal(self):
+        with self.assertRaises(ValidationError):
+            Route.objects.create(
+                source=self.airport1,
+                destination=self.airport1,
+                distance=1000
+            )
+
