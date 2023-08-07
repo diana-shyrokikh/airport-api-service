@@ -216,7 +216,7 @@ class AirplaneType(models.Model):
 class Airplane(models.Model):
     name = models.CharField(unique=True, max_length=63)
     rows = models.PositiveIntegerField()
-    seats_in_rows = models.PositiveIntegerField()
+    seats_in_row = models.PositiveIntegerField()
     airplane_type = models.ForeignKey(
         AirplaneType,
         related_name="airplanes",
@@ -231,7 +231,7 @@ class Airplane(models.Model):
 
     @property
     def airplane_capacity(self):
-        return self.rows * self.seats_in_rows
+        return self.rows * self.seats_in_row
 
     def __str__(self) -> str:
         return f"{self.name} ({self.airplane_type})"
@@ -427,7 +427,7 @@ class Ticket(models.Model):
         Ticket.validate_seat_or_row(
             field_name="seat",
             seat_or_row=self.seat,
-            seats_or_rows=self.flight.airplane.seats_in_rows,
+            seats_or_rows=self.flight.airplane.seats_in_row,
             error_to_raise=ValidationError
         )
 

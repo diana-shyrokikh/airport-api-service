@@ -382,7 +382,7 @@ class AirplaneView(
 
         if capacity:
             queryset = queryset.annotate(
-                capacity=F("rows") * F("seats_in_rows")
+                capacity=F("rows") * F("seats_in_row")
             ).filter(capacity=capacity)
 
         return queryset
@@ -509,7 +509,7 @@ class FlightView(
                 "airplane__airplane_type").annotate(
                 tickets_available=(
                         F("airplane__rows")
-                        * F("airplane__seats_in_rows")
+                        * F("airplane__seats_in_row")
                         - Count("tickets")
                 )
             )

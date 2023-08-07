@@ -232,14 +232,14 @@ class AirplaneListSerializer(AirplaneSerializer):
             "airplane_type",
             "airplane_capacity",
             "rows",
-            "seats_in_rows",
+            "seats_in_row",
         )
 
 
 class AirplaneTypeAirplaneListSerializer(AirplaneSerializer):
     class Meta:
         model = Airplane
-        fields = ("name", "rows", "seats_in_rows", "airplane_capacity")
+        fields = ("name", "rows", "seats_in_row", "airplane_capacity")
 
 
 class AirplaneTypeDetailSerializer(AirplaneTypeListSerializer):
@@ -391,7 +391,7 @@ class AirplaneDetailSerializer(AirplaneSerializer):
             "name",
             "airplane_type",
             "rows",
-            "seats_in_rows",
+            "seats_in_row",
             "airplane_capacity",
             "flights"
         )
@@ -422,7 +422,7 @@ class TicketSerializer(serializers.ModelSerializer):
         Ticket.validate_seat_or_row(
             field_name="seat",
             seat_or_row=attrs["seat"],
-            seats_or_rows=attrs["flight"].airplane.seats_in_rows,
+            seats_or_rows=attrs["flight"].airplane.seats_in_row,
             error_to_raise=serializers.ValidationError
         )
 
