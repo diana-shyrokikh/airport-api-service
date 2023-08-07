@@ -198,10 +198,11 @@ class AirplaneTypeListSerializer(AirplaneTypeSerializer):
         many=True,
         read_only=True,
     )
+    airplane_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = AirplaneType
-        fields = ("id", "name", "airplanes")
+        fields = ("id", "name", "airplane_count", "airplanes")
 
 
 class AirplaneSerializer(serializers.ModelSerializer):
@@ -241,12 +242,12 @@ class AirplaneTypeAirplaneListSerializer(AirplaneSerializer):
         fields = ("name", "rows", "seats_in_rows", "airplane_capacity")
 
 
-class AirplaneTypeDetailSerializer(AirplaneTypeSerializer):
+class AirplaneTypeDetailSerializer(AirplaneTypeListSerializer):
     airplanes = AirplaneTypeAirplaneListSerializer(many=True, read_only=True)
 
     class Meta:
         model = AirplaneType
-        fields = ("id", "name", "airplanes")
+        fields = ("id", "name", "airplane_count", "airplanes")
 
 
 class CrewSerializer(serializers.ModelSerializer):

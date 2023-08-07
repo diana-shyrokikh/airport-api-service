@@ -204,7 +204,9 @@ class AirplaneTypeView(viewsets.ModelViewSet):
         name = self.request.query_params.get("name")
 
         if self.action != "destroy":
-            queryset = AirplaneType.objects.prefetch_related("airplanes",)
+            queryset = AirplaneType.objects.prefetch_related("airplanes",).annotate(
+                airplane_count=Count("airplanes")
+            )
 
         if name:
             queryset = queryset.filter(name__icontains=name)
