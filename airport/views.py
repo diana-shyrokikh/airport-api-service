@@ -91,10 +91,16 @@ class CountryView(
         return serializer_class
 
 
-class CityView(viewsets.ModelViewSet):
+class CityView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = City.objects.all()
     serializer_class = CitySerializer
     pagination_class = FiveSizePagination
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
 
     def get_queryset(self):
         queryset = self.queryset
