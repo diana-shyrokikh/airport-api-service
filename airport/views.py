@@ -1,5 +1,6 @@
 from django.db.models import F, Count
 from rest_framework import viewsets, mixins
+from rest_framework.permissions import IsAuthenticated
 
 from airport.get_ids import get_ids
 from airport.models import (
@@ -100,7 +101,7 @@ class CityView(
     queryset = City.objects.all()
     serializer_class = CitySerializer
     pagination_class = FiveSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -140,7 +141,7 @@ class AirportView(
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     pagination_class = FiveSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -186,7 +187,7 @@ class RouteView(
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
     pagination_class = FiveSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -228,7 +229,7 @@ class AirplaneTypeView(
     queryset = AirplaneType.objects.all()
     serializer_class = AirplaneTypeSerializer
     pagination_class = FiveSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -266,7 +267,7 @@ class AirplaneView(
     queryset = Airplane.objects.all()
     serializer_class = AirplaneSerializer
     pagination_class = FiveSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -314,7 +315,7 @@ class CrewView(
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
     pagination_class = TenSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly,]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -354,7 +355,7 @@ class FlightView(
     queryset = Flight.objects.all()
     serializer_class = FlightSerializer
     pagination_class = TwoSizePagination
-    permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_queryset(self):
         queryset = self.queryset
@@ -405,10 +406,16 @@ class FlightView(
         return serializer_class
 
 
-class OrderView(viewsets.ModelViewSet):
+class OrderView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     pagination_class = TwoSizePagination
+    permission_classes = [IsAuthenticated, ]
 
     def get_serializer_class(self):
         serializer_class = self.serializer_class
