@@ -406,7 +406,7 @@ class AirplaneView(
                 required=False,
             ),
             OpenApiParameter(
-                "airplane type",
+                "airplane_type",
                 type=str,
                 description="Filter by airplane type (ex. ?airplane_type=name)",
                 required=False,
@@ -668,6 +668,19 @@ class TicketView(
             serializer_class = TicketDetailSerializer
 
         return serializer_class
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "flights",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by flights id (ex. ?flights=1,3)",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class TakenTicketsView(viewsets.ModelViewSet):
