@@ -17,7 +17,10 @@ from user.models import User
 
 class Country(models.Model):
     COUNTRY_CHOICES = [
-        (country.name.title(), country.name.title())
+        (
+            country.name.title().split(",")[0],
+            country.name.title().split(",")[0]
+        )
         for country in list(countries)
     ]
 
