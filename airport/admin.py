@@ -39,8 +39,32 @@ class RouteAdmin(admin.ModelAdmin):
 class AirplaneTypeAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
 
-admin.site.register(Airplane)
-admin.site.register(Crew)
-admin.site.register(Flight)
+
+@admin.register(Airplane)
+class AirplaneAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "airplane_type",
+        "name",
+        "rows",
+        "seats_in_row"
+    ]
+
+
+@admin.register(Crew)
+class CrewAdmin(admin.ModelAdmin):
+    list_display = ["id", "first_name", "last_name"]
+
+
+@admin.register(Flight)
+class FlightAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "route",
+        "airplane",
+        "departure_time",
+        "arrival_time"
+    ]
+
 admin.site.register(Order)
 admin.site.register(Ticket)
