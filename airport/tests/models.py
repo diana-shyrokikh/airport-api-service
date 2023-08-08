@@ -143,3 +143,36 @@ class AirplaneModelTests(TestCase):
                     rows=10,
                     seats_in_row=5,
                 )
+
+
+class CrewModelTests(TestCase):
+
+    def test_crew_str(self):
+        crew = Crew.objects.create(
+            first_name="Test First Name",
+            last_name="Test Last Name",
+
+        )
+
+        self.assertEqual(
+            f"{crew.first_name} {crew.last_name}",
+            str(crew)
+        )
+
+    def test_validate_name(self):
+        invalid_names = ["   ", "123Test", ".,", "Test_"]
+
+        for name in invalid_names:
+            with self.assertRaises(ValidationError):
+                Crew.objects.create(
+                    first_name=name,
+                    last_name="Test Last Name"
+                )
+
+        for name in invalid_names:
+            with self.assertRaises(ValidationError):
+                Crew.objects.create(
+                    last_name=name,
+                    first_name="Test First Name"
+                )
+
