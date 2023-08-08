@@ -113,3 +113,33 @@ class AirplaneTypeModelTests(TestCase):
                 AirplaneType.objects.create(name=name)
 
 
+class AirplaneModelTests(TestCase):
+    def setUp(self) -> None:
+        self.airplane_type = AirplaneType.objects.create(
+            name="TestAirplaneType AT28",
+        )
+
+    def test_airplane_str(self):
+        airplane = Airplane.objects.create(
+            name="Test Airplane 28",
+            airplane_type=self.airplane_type,
+            rows=10,
+            seats_in_row=5,
+        )
+
+        self.assertEqual(
+            f"{airplane.name} ({airplane.airplane_type})",
+            str(airplane)
+        )
+
+    def test_validate_airplane(self):
+        invalid_names = ["   ", "123Test", ".,", "Test_"]
+
+        for name in invalid_names:
+            with self.assertRaises(ValidationError):
+                Airplane.objects.create(
+                    name=name,
+                    airplane_type=self.airplane_type,
+                    rows=10,
+                    seats_in_row=5,
+                )
