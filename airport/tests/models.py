@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils import timezone
 
 from airport.models import (
     Country,
@@ -175,4 +178,107 @@ class CrewModelTests(TestCase):
                     last_name=name,
                     first_name="Test First Name"
                 )
+
+
+class FlightModelTests(TestCase):
+    def setUp(self) -> None:
+        self.country1 = Country.objects.create(name="Ukraine")
+        self.country2 = Country.objects.create(name="Italy")
+
+        self.city1 = City.objects.create(name="Kyiv", country=self.country1)
+        self.city2 = City.objects.create(name="Rome", country=self.country2)
+
+        self.airport1 = Airport.objects.create(name="FirstTestAirport", closest_big_city=self.city1)
+        self.airport2 = Airport.objects.create(name="SecondTestAirport", closest_big_city=self.city2)
+
+        self.route = Route.objects.create(
+            source=self.airport1,
+            destination=self.airport2,
+            distance=5000
+        )
+
+        self.airplane_type = AirplaneType.objects.create(
+            name="TestAirplaneType AT28",
+        )
+        self.airplane = Airplane.objects.create(
+            name="TestAirplane",
+            rows=50,
+            seats_in_row=11,
+            airplane_type=self.airplane_type
+        )
+        self.crew = [
+            Crew.objects.create(
+                first_name=f"Test {letter}",
+                last_name="TestLast"
+            )
+            for letter in "abcde"
+        ]
+
+        self.departure_time = datetime(
+            2023, 8, 17, 18, 0,
+            tzinfo=timezone.utc
+        )
+        self.arrival_time = datetime(
+            2023, 8, 17, 20, 0,
+            tzinfo=timezone.utc
+        )
+
+    def test_flight_str(self):
+        flight = Flight.objects.create(
+            route=self.route,
+            airplane=self.airplane,
+            departure_time=self.departure_time,
+            arrival_time=self.arrival_time
+        )
+
+        for member in self.crew:
+            flight.crew.add(member)
+
+        flight.save()
+
+        self.assertEqual(
+            f"{flight.route} ({flight.departure_time})",
+            str(flight)
+        )
+
+    def test_validate_date(self):
+        invalid_date = datetime(
+            2018, 8, 17, 18, 0,
+            tzinfo=timezone.utc
+        )
+
+        with self.assertRaises(ValidationError):
+            Flight.objects.create(
+                route=self.route,
+                airplane=self.airplane,
+                departure_time=invalid_date,
+                arrival_time=self.arrival_time
+            )
+
+        with self.assertRaises(ValidationError):
+            Flight.objects.create(
+                route=self.route,
+                airplane=self.airplane,
+                departure_time=self.departure_time,
+                arrival_time=invalid_date
+            )
+
+    def test_validate_date_is_not_equal(self):
+        with self.assertRaises(ValidationError):
+            Flight.objects.create(
+                route=self.route,
+                airplane=self.airplane,
+                departure_time=self.arrival_time,
+                arrival_time=self.arrival_time
+            )
+
+    def test_validate_departure_arrival_date(self):
+        with self.assertRaises(ValidationError):
+            Flight.objects.create(
+                route=self.route,
+                airplane=self.airplane,
+                departure_time=self.arrival_time,
+                arrival_time=self.departure_time
+            )
+
 
