@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -27,7 +28,7 @@ class CountryModelTests(TestCase):
 
 
 class CityModelTests(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.country = Country.objects.create(name="Ukraine")
 
     def test_city_str(self):
@@ -44,7 +45,7 @@ class CityModelTests(TestCase):
 
 
 class AirportModelTests(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.country = Country.objects.create(name="Ukraine")
         self.city = City.objects.create(name="Kyiv", country=self.country)
 
@@ -68,7 +69,7 @@ class AirportModelTests(TestCase):
 
 
 class RouteModelTests(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.country1 = Country.objects.create(name="Ukraine")
         self.country2 = Country.objects.create(name="Italy")
 
@@ -117,7 +118,7 @@ class AirplaneTypeModelTests(TestCase):
 
 
 class AirplaneModelTests(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.airplane_type = AirplaneType.objects.create(
             name="TestAirplaneType AT28",
         )
@@ -180,8 +181,8 @@ class CrewModelTests(TestCase):
                 )
 
 
-class FlightModelTests(TestCase):
-    def setUp(self) -> None:
+class FlightTicketOrderModelTests(TestCase):
+    def setUp(self):
         self.country1 = Country.objects.create(name="Ukraine")
         self.country2 = Country.objects.create(name="Italy")
 
@@ -222,6 +223,13 @@ class FlightModelTests(TestCase):
             2023, 8, 17, 20, 0,
             tzinfo=timezone.utc
         )
+
+        self.user = get_user_model().objects.create_user(
+            email="test@post.com",
+            password="user123456"
+        )
+
+        self.order = Order.objects.create(user=self.user)
 
     def test_flight_str(self):
         flight = Flight.objects.create(
@@ -281,4 +289,42 @@ class FlightModelTests(TestCase):
                 arrival_time=self.departure_time
             )
 
+    def test_ticket_order_full_check(self):
+        flight = Flight.objects.create(
+            route=self.route,
+            airplane=self.airplane,
+            departure_time=self.departure_time,
+            arrival_time=self.arrival_time
+        )
 
+        ticket = Ticket.objects.create(
+            row=1,
+            seat=2,
+            flight=flight,
+            order=self.order
+        )
+
+        self.assertEqual(
+            f"Ticket: row {ticket.row}, seat {ticket.seat}",
+            str(ticket)
+        )
+        self.assertEqual(
+            f"Order №{self.order.id}",
+            str(self.order)
+        )
+
+        with self.assertRaises(ValidationError):
+            Ticket.objects.create(
+                row=100,
+                seat=1,
+                flight=flight,
+                order=self.order
+            )
+
+        with self.assertRaises(ValidationError):
+            Ticket.objects.create(
+                row=1,
+                seat=100,
+                flight=flight,
+                order=self.order
+            )
