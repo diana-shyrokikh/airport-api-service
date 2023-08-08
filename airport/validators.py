@@ -6,7 +6,7 @@ from django.utils import timezone
 
 NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
 AIRPORT_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s.()-/]+$"
-AIRPLANE_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
+AIRPLANE_NAME_PATTERN = r"^(?!^[0-9])^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
 
 
 def validate_name(
