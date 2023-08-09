@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.utils import timezone
 
-from is_city_exist import get_country
+from airport.is_city_exist import get_country
 
 NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
 AIRPORT_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s.()-/]+$"
