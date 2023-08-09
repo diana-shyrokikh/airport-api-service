@@ -3,10 +3,29 @@ from datetime import datetime
 
 from django.utils import timezone
 
+from is_city_exist import get_country
 
 NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
 AIRPORT_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s.()-/]+$"
 AIRPLANE_NAME_PATTERN = r"^(?!^[0-9])^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
+
+
+def validate_city_country(
+        city: str,
+        country: "Country",
+        error_to_raise
+):
+    country_name = get_country(city)
+    if country_name == "error":
+        raise error_to_raise({
+            "name": "The city doesn't exist"
+        })
+
+    if country.lower() != country_name.lower():
+        raise error_to_raise({
+            "country": "The city is not on the territory "
+                       "of the country"
+        })
 
 
 def validate_name(

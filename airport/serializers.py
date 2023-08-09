@@ -20,7 +20,7 @@ from airport.validators import (
     validate_date_is_not_equal,
     validate_source_and_destination_is_not_equal,
     validate_airport_name,
-    validate_departure_arrival_date
+    validate_departure_arrival_date, validate_city_country
 )
 
 
@@ -53,6 +53,11 @@ class CitySerializer(serializers.ModelSerializer):
 
         validate_name(
             name=attrs["name"],
+            error_to_raise=serializers.ValidationError
+        )
+        validate_city_country(
+            city=attrs["name"],
+            country=attrs["country"].name,
             error_to_raise=serializers.ValidationError
         )
 
