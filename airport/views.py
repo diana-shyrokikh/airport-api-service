@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.db.models import F, Count
-from django.template.defaultfilters import date
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
@@ -261,7 +260,6 @@ class RouteView(
                 "source__closest_big_city__country",
                 "destination__closest_big_city__country",
             )
-
         if source:
             queryset = queryset.filter(source__name__icontains=source)
 
