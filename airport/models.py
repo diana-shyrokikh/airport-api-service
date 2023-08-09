@@ -103,7 +103,7 @@ class Airport(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name} ({self.closest_big_city.name})"
+        return self.name
 
     class Meta:
         unique_together = ("name", "closest_big_city")
@@ -155,8 +155,7 @@ class Route(models.Model):
 
     def __str__(self):
         return (
-            f"{self.source.closest_big_city.name} "
-            f"- {self.destination.closest_big_city.name}"
+            f"{self.source} - {self.destination}"
         )
 
     def clean(self):
@@ -235,7 +234,7 @@ class Airplane(models.Model):
         return self.rows * self.seats_in_row
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.airplane_type})"
+        return self.name
 
     def clean(self):
         validate_airplane(
@@ -319,12 +318,21 @@ class Flight(models.Model):
         related_name="flights",
         on_delete=models.CASCADE
     )
-    crew = models.ManyToManyField(Crew, related_name="flights")
+    crew = models.ManyToManyField(
+        Crew,
+        related_name="flights",
+        blank=True
+    )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
 
     class Meta:
-        unique_together = ("route", "airplane", "departure_time")
+        unique_together = (
+            "route",
+            "airplane",
+            "departure_time",
+            "arrival_time"
+        )
 
     @property
     def flight_duration(self):
