@@ -16,10 +16,12 @@ from airport.models import (
     Airplane,
     Crew,
     Flight,
-    Order,
-    Ticket,
 )
-from airport.serializers import FlightListSerializer, FlightDetailSerializer
+
+from airport.serializers import (
+    FlightListSerializer,
+    FlightDetailSerializer
+)
 
 FLIGHT_URL = reverse("airport:flight-list")
 
@@ -55,10 +57,13 @@ class AuthenticatedFlightApiTests(TestCase):
 
         self.cities = [
             City.objects.create(
-                name=f"TestCity{self.countries[i].name}",
-                country=self.countries[i]
+                name="Kyiv",
+                country=self.countries[0]
+            ),
+            City.objects.create(
+                name="Rome",
+                country=self.countries[1]
             )
-            for i in range(2)
         ]
 
         self.airports = [
@@ -326,10 +331,13 @@ class AdminMovieApiTests(TestCase):
 
         self.cities = [
             City.objects.create(
-                name=f"TestCity{self.countries[i].name}",
-                country=self.countries[i]
+                name="Kyiv",
+                country=self.countries[0]
+            ),
+            City.objects.create(
+                name="Rome",
+                country=self.countries[1]
             )
-            for i in range(2)
         ]
 
         self.airports = [
