@@ -12,7 +12,7 @@ AIRPLANE_NAME_PATTERN = r"^(?!^[0-9])^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$"
 
 def validate_city_country(
         city: str,
-        country: "Country",
+        country: str,
         error_to_raise
 ):
     country_name = get_country(city)
