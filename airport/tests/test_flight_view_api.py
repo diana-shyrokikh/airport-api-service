@@ -230,9 +230,13 @@ class AuthenticatedFlightApiTests(TestCase):
         ]
 
         for i in range(2):
-            self.assertEqual(serializer_destinations[i], request_destinations[i])
+            self.assertEqual(
+                serializer_destinations[i], request_destinations[i]
+            )
 
-            self.assertNotEqual(serializer_destinations[2], request_destinations[i])
+            self.assertNotEqual(
+                serializer_destinations[2], request_destinations[i]
+            )
 
     def test_filter_flights_by_source(self):
         request = self.client.get(
