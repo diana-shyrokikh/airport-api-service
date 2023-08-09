@@ -36,7 +36,8 @@ def validate_name(
 
     if re.search(NAME_PATTERN, name) is None:
         raise error_to_raise({
-            f"{field_name}": f"{name} should contain only english letters also spaces are allowed"
+            f"{field_name}": f"{name} should contain only "
+                             f"english letters also spaces are allowed"
         })
 
 
@@ -49,7 +50,8 @@ def validate_airport_name(
     if re.search(AIRPORT_NAME_PATTERN, name) is None:
         raise error_to_raise({
             f"{field_name}": f"{name} should contain english letters "
-                             f"also spaces, parentheses and symbols: - . /  are allowed"
+                             f"also spaces, parentheses and "
+                             f"symbols: - . /  are allowed"
         })
 
 
