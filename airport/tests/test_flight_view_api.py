@@ -219,16 +219,20 @@ class AuthenticatedFlightApiTests(TestCase):
         flights = Flight.objects.all()
         serializer = FlightListSerializer(flights, many=True)
 
-        serializer_destination1 = serializer.data[0]["route"].split(" - ")[-1]
-        serializer_destination2 = serializer.data[1]["route"].split(" - ")[-1]
-        serializer_destination3 = serializer.data[-1]["route"].split(" - ")[-1]
-        request_destination1 = request.data["results"][0]["route"].split(" - ")[-1]
-        request_destination2 = request.data["results"][1]["route"].split(" - ")[-1]
+        serializer_destinations = [
+            serializer.data[i]["route"].split(" - ")[-1]
+            for i in range(3)
+        ]
 
-        self.assertEqual(serializer_destination1, request_destination1)
-        self.assertEqual(serializer_destination2, request_destination2)
-        self.assertNotEqual(serializer_destination3, request_destination1)
-        self.assertNotEqual(serializer_destination3, request_destination2)
+        request_destinations = [
+            request.data["results"][i]["route"].split(" - ")[-1]
+            for i in range(2)
+        ]
+
+        for i in range(2):
+            self.assertEqual(serializer_destinations[i], request_destinations[i])
+
+            self.assertNotEqual(serializer_destinations[2], request_destinations[i])
 
     def test_filter_flights_by_source(self):
         request = self.client.get(
@@ -397,8 +401,13 @@ class AdminMovieApiTests(TestCase):
             request.data["airplane"]
         ),
 
-        request_departure_time = datetime.strptime(request.data["departure_time"], '%Y-%m-%dT%H:%M:%SZ')
-        request_departure_time_naive = request_departure_time.replace(tzinfo=None)
+        request_departure_time = datetime.strptime(
+            request.data["departure_time"],
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+        request_departure_time_naive = request_departure_time.replace(
+            tzinfo=None
+        )
 
         self.assertEqual(
             flight.departure_time.replace(tzinfo=None),
@@ -460,5 +469,7 @@ class AdminMovieApiTests(TestCase):
 
         request = self.client.delete(url)
 
-        self.assertEqual(request.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
+        self.assertEqual(
+            request.status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED
+        )
