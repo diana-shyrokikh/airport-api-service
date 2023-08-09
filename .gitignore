@@ -159,3 +159,6 @@ poetry.toml
 .ruff_cache/
 
 pyrightconfig.json
+
+/airport/migrations/*
+/user/migrations/*
