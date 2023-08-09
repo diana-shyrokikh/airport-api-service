@@ -10,7 +10,7 @@ from airport.validators import (
     validate_date_is_not_equal,
     validate_source_and_destination_is_not_equal,
     validate_airport_name,
-    validate_departure_arrival_date
+    validate_departure_arrival_date, validate_city_country
 )
 from user.models import User
 
@@ -74,6 +74,11 @@ class City(models.Model):
 
     def clean(self):
         validate_name(name=self.name, error_to_raise=ValidationError)
+        validate_city_country(
+            city=self.name,
+            country=self.country.name,
+            error_to_raise=ValidationError
+        )
 
     def save(
         self,
