@@ -55,10 +55,7 @@ class AirportModelTests(TestCase):
             closest_big_city=self.city,
         )
 
-        self.assertEqual(
-            f"{airport.name} ({airport.closest_big_city.name})",
-            str(airport)
-        )
+        self.assertEqual(airport.name,str(airport))
 
     def test_validate_airport_name(self):
         invalid_names = ["   ", "123Test", ".,", "Test_"]
@@ -86,10 +83,8 @@ class RouteModelTests(TestCase):
             distance=5000,
         )
 
-        string = (
-            f"{route.source.closest_big_city.name} "
-            f"- {route.destination.closest_big_city.name}"
-        )
+        string = f"{route.source} - {route.destination}"
+
         self.assertEqual(string, str(route))
 
     def test_validate_source_and_destination_is_not_equal(self):
@@ -131,10 +126,7 @@ class AirplaneModelTests(TestCase):
             seats_in_row=5,
         )
 
-        self.assertEqual(
-            f"{airplane.name} ({airplane.airplane_type})",
-            str(airplane)
-        )
+        self.assertEqual(airplane.name, str(airplane))
 
     def test_validate_airplane(self):
         invalid_names = ["   ", "123Test", ".,", "Test_"]
