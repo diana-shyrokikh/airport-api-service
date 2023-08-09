@@ -169,7 +169,9 @@ class RouteSerializer(serializers.ModelSerializer):
 
 class RouteListSerializer(RouteSerializer):
     source = serializers.CharField(source="source.name", read_only=True)
-    destination = serializers.CharField(source="destination.name", read_only=True)
+    destination = serializers.CharField(
+        source="destination.name", read_only=True
+    )
 
     class Meta:
         model = Route
@@ -231,7 +233,9 @@ class AirplaneSerializer(serializers.ModelSerializer):
 
 
 class AirplaneListSerializer(AirplaneSerializer):
-    airplane_type = serializers.CharField(source="airplane_type.name", read_only=True)
+    airplane_type = serializers.CharField(
+        source="airplane_type.name", read_only=True
+    )
 
     class Meta:
         model = Airplane
@@ -360,7 +364,9 @@ class FlightDetailSerializer(FlightListSerializer):
     route = RouteListSerializer(many=False, read_only=True,)
     airplane = AirplaneListSerializer(many=False, read_only=True,)
     crew = CrewListSerializer(many=True, read_only=True,)
-    taken_places = TakenTicketsSerializer(source="tickets", many=True, read_only=True)
+    taken_places = TakenTicketsSerializer(
+        source="tickets", many=True, read_only=True
+    )
 
     class Meta:
         model = Flight
