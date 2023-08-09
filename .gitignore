@@ -160,5 +160,5 @@ poetry.toml
 
 pyrightconfig.json
 
-/airport/migrations/*
-/user/migrations/*
+/user/migrations/
+/airport/migrations/
