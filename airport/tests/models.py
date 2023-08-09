@@ -55,7 +55,7 @@ class AirportModelTests(TestCase):
             closest_big_city=self.city,
         )
 
-        self.assertEqual(airport.name,str(airport))
+        self.assertEqual(airport.name, str(airport))
 
     def test_validate_airport_name(self):
         invalid_names = ["   ", "123Test", ".,", "Test_"]
@@ -73,8 +73,12 @@ class RouteModelTests(TestCase):
         self.city1 = City.objects.create(name="Kyiv", country=self.country1)
         self.city2 = City.objects.create(name="Rome", country=self.country2)
 
-        self.airport1 = Airport.objects.create(name="FirstTestAirport", closest_big_city=self.city1)
-        self.airport2 = Airport.objects.create(name="SecondTestAirport", closest_big_city=self.city2)
+        self.airport1 = Airport.objects.create(
+            name="FirstTestAirport", closest_big_city=self.city1
+        )
+        self.airport2 = Airport.objects.create(
+            name="SecondTestAirport", closest_big_city=self.city2
+        )
 
     def test_route_str(self):
         route = Route.objects.create(
@@ -181,8 +185,12 @@ class FlightTicketOrderModelTests(TestCase):
         self.city1 = City.objects.create(name="Kyiv", country=self.country1)
         self.city2 = City.objects.create(name="Rome", country=self.country2)
 
-        self.airport1 = Airport.objects.create(name="FirstTestAirport", closest_big_city=self.city1)
-        self.airport2 = Airport.objects.create(name="SecondTestAirport", closest_big_city=self.city2)
+        self.airport1 = Airport.objects.create(
+            name="FirstTestAirport", closest_big_city=self.city1
+        )
+        self.airport2 = Airport.objects.create(
+            name="SecondTestAirport", closest_big_city=self.city2
+        )
 
         self.route = Route.objects.create(
             source=self.airport1,
