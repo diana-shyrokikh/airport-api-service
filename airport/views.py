@@ -186,7 +186,9 @@ class AirportView(
         city_ids = self.request.query_params.get("cities")
 
         if self.action != "destroy":
-            queryset = Airport.objects.select_related("closest_big_city__country")
+            queryset = Airport.objects.select_related(
+                "closest_big_city__country"
+            )
 
         if name:
             queryset = queryset.filter(name__icontains=name)
@@ -264,7 +266,9 @@ class RouteView(
             queryset = queryset.filter(source__name__icontains=source)
 
         if destination:
-            queryset = queryset.filter(destination__name__icontains=destination)
+            queryset = queryset.filter(
+                destination__name__icontains=destination
+            )
 
         return queryset
 
@@ -315,7 +319,9 @@ class AirplaneTypeView(
         name = self.request.query_params.get("name")
 
         if self.action != "destroy":
-            queryset = AirplaneType.objects.prefetch_related("airplanes",).annotate(
+            queryset = AirplaneType.objects.prefetch_related(
+                "airplanes"
+            ).annotate(
                 airplane_count=Count("airplanes")
             )
 
@@ -406,7 +412,8 @@ class AirplaneView(
             OpenApiParameter(
                 "airplane_type",
                 type=str,
-                description="Filter by airplane type (ex. ?airplane_type=name)",
+                description="Filter by airplane type "
+                            "(ex. ?airplane_type=name)",
                 required=False,
             ),
             OpenApiParameter(
@@ -545,13 +552,15 @@ class FlightView(
             OpenApiParameter(
                 "departure_date",
                 type=datetime,
-                description="Filter by departure date (ex. ?departure_date=year-month-day)",
+                description="Filter by departure date "
+                            "(ex. ?departure_date=year-month-day)",
                 required=False,
             ),
             OpenApiParameter(
                 "arrival_date",
                 type=datetime,
-                description="Filter by arrival date (ex. ?arrival_date=year-month-day)",
+                description="Filter by arrival date "
+                            "(ex. ?arrival_date=year-month-day)",
                 required=False,
             ),
             OpenApiParameter(
@@ -600,8 +609,10 @@ class OrderView(
 
         if self.action != "destroy":
             queryset = Order.objects.prefetch_related(
-                "tickets__flight__route__destination__closest_big_city__country",
-                "tickets__flight__route__source__closest_big_city__country",
+                "tickets__flight__route__destination"
+                "__closest_big_city__country",
+                "tickets__flight__route__source"
+                "__closest_big_city__country",
                 "tickets__flight__airplane__airplane_type"
             )
 
@@ -618,7 +629,8 @@ class OrderView(
             OpenApiParameter(
                 "date",
                 type=datetime,
-                description="Filter by created date (ex. ?date=year-month-day)",
+                description="Filter by created date "
+                            "(ex. ?date=year-month-day)",
                 required=False,
             ),
         ]
