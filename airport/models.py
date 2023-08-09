@@ -342,7 +342,10 @@ class Flight(models.Model):
     @property
     def flight_duration(self):
         seconds_in_hour = 3600
-        return (self.arrival_time - self.departure_time).total_seconds() / seconds_in_hour
+        return (
+                (self.arrival_time - self.departure_time).total_seconds()
+                / seconds_in_hour
+        )
 
     def __str__(self) -> str:
         return f"{self.route} ({self.departure_time})"
