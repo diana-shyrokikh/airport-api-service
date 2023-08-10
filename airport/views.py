@@ -512,11 +512,9 @@ class FlightView(
                 "route__destination__closest_big_city__country",
                 "route__source__closest_big_city__country",
                 "airplane__airplane_type").annotate(
-                tickets_available=(
-                        F("airplane__rows")
-                        * F("airplane__seats_in_row")
-                        - Count("tickets")
-                )
+                tickets_available=(F("airplane__rows")
+                                   * F("airplane__seats_in_row")
+                                   - Count("tickets"))
             )
 
         if departure_date:
