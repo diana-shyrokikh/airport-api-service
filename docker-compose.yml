@@ -19,6 +19,7 @@ services:
       - .env
     depends_on:
       - db
+    image: diashiro/airport-api-service:airport-api-service
 
   db:
     image: postgres:14-alpine
