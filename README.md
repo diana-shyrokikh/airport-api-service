@@ -135,28 +135,26 @@ docker-compose up -d --build
 ### API
 1. Airport API Service is accessible at 
 <br>
-`http://localhost:8000/api/v1/airport/`
+```http://localhost:8000/api/v1/airport/```
 <br>
 2. The detailed Page for a specific resource is available at 
 <br>
-`http://localhost:8000/api/v1/airport/<resource_name>/id/`
+```http://localhost:8000/api/v1/airport/<resource_name>/id/```
 <br>
 3. Registration Page is accessible at 
 <br>
-`http://localhost:8000/api/v1/user/register/`
+```http://localhost:8000/api/v1/user/register/```
 <br>
 4. Token Obtain Pair Page is accessible at 
 <br>
-`http://localhost:8000/api/v1/user/token/`
+```http://localhost:8000/api/v1/user/token/```
 <br>
 5. Token Refresh Page is accessible at 
 <br>
-`http://localhost:8000/api/v1/user/token/refresh/`
+```http://localhost:8000/api/v1/user/token/refresh/```
 <br>
 6. Django Admin Page is accessible at
-<br>
-`http://localhost:8000/admin/`
-<br>
+```http://localhost:8000/admin/```
 <br>
 Use these credentials to log in as a user
 <br>(functionality for staff will be open):
