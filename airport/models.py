@@ -112,6 +112,7 @@ class Airport(models.Model):
 
     class Meta:
         unique_together = ("name", "closest_big_city")
+        ordering = ["name"]
 
     def clean(self):
         validate_airport_name(name=self.name, error_to_raise=ValidationError)
