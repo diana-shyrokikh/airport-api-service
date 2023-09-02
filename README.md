@@ -121,7 +121,7 @@ cd airport-api-service
 ```
 3. Build and run the Docker containers:
 ```
-docker-compose up -d --build
+docker-compose up --build
 ```
 
 <hr>
