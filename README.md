@@ -28,12 +28,12 @@
 Flight tracking is an indispensable aspect of modern aviation and has become a necessity for various reasons. 
 <br>
 In today's interconnected world, the ability to monitor and trace the movement of aircraft in real-time 
-offers several benefits that contribute to safety and efficiency of air travel.
+offers several benefits that contribute to the safety and efficiency of air travel.
 
 The Airport API Service helps to track flights from airports across the whole globe.
 
 <br>
-The main functions of project:
+The main functions of the project:
 
 - Track and save flights from airports;
 - Order flight tickets;
@@ -45,7 +45,7 @@ The main functions of project:
 
 #### Staff required:
 
-1. Add countries to the service from list of all countries
+1. Add countries to the service from the list of all countries
 2. Add only existing cities to countries (check with WeatherAPI)
 3. Add airports with airport type
 4. Create and manage routes
@@ -63,8 +63,8 @@ The main functions of project:
 7. Check your order information
 
 #### Non-authenticated user required:
-1. Create an account using only email address and password
-2. Log in with a JSON web token
+1. Create an account using only an email address and password
+2. Login with a JSON web token
 
 <b>Please note</b>: 
 Any service information can only be deleted from the admin page
@@ -75,11 +75,11 @@ Any service information can only be deleted from the admin page
 ## Technologies
 
 - [Django Official Documentation](https://docs.djangoproject.com/)
-<br>Django is a high-level Python Web framework. In this project, it's used to create the backend service. This service builds the Django application and exposes it on port 8080.
+<br>Django is a high-level Python Web framework. In this project, it's used to create the backend service. This service builds the Django application and exposes it on port 8000.
 
 
 - [Postgres Official Documentation](https://www.postgresql.org/docs/)
-<br>Postgres is a powerful, open-source object-relational database system. In this project, it is used as the main data store. This service runs the latest version of Postgres, exposed on port 5432. It uses a volume to persist the database data.
+<br>Postgres is a powerful, open-source object-relational database system. In this project, it is used as the main data store, exposed on port 5432. It uses a volume to persist the database data.
 <hr>
 
 
@@ -94,7 +94,7 @@ and [here for Docker Compose](https://docs.docker.com/compose/install/).
 
 ## Setup
 
-<b>There are two ways to setup the project</b>:
+<b>There are two ways to set up the project</b>:
 - Pulling from Docker Hub;
 - Cloning from Git.
 
@@ -134,9 +134,9 @@ docker-compose up -d --build
 
 ### API
 1. Airport API Service is accessible at `http://localhost:8000/api/v1/airport/`
-2. The detailed Page for a specific resource is available at `http://localhost:8000/api/v1/airport/<resource_name>/id/`
+2. The Detailed Page for a specific resource is available at `http://localhost:8000/api/v1/airport/<resource_name>/id/`
 3. Registration Page is accessible at `http://localhost:8000/api/v1/user/register/`
-4. Token Obtain Pair Page is accessible at `http://localhost:8000/api/v1/user/token/`
+4. The Token Obtain Pair Page is accessible at `http://localhost:8000/api/v1/user/token/`
 5. Token Refresh Page is accessible at `http://localhost:8000/api/v1/user/token/refresh/`
 6. Django Admin Page is accessible at `http://localhost:8000/admin/`
 
@@ -152,7 +152,7 @@ Use these credentials to log in as a user
 
 ## Shutdown
 
-1. To stop running server use CTRL-C
+1. To stop running the server use CTRL-C
 
 <hr>
 
