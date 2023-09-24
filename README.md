@@ -94,23 +94,6 @@ and [here for Docker Compose](https://docs.docker.com/compose/install/).
 
 ## Setup
 
-<b>There are two ways to set up the project</b>:
-- Pulling from Docker Hub;
-- Cloning from Git.
-
-### Docker Hub
-
-1. Pull the project with the command:
-```
-docker pull diashiro/airport-api-service:airport-api-service
-```
-2. Run the Docker containers:
-```
-docker-compose up
-```
-
-### Git Hub
-
 1. Clone the project:
 ```
 git clone https://github.com/diana-shyrokikh/airport-api-service.git
@@ -121,7 +104,8 @@ cd airport-api-service
 ```
 3. Build and run the Docker containers:
 ```
-docker-compose up --build
+docker-compose build
+docker-compose up
 ```
 
 <hr>
