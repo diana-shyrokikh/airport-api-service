@@ -20,7 +20,9 @@ from airport.validators import (
     validate_date_is_not_equal,
     validate_source_and_destination_is_not_equal,
     validate_airport_name,
-    validate_departure_arrival_date, validate_city_country
+    validate_departure_arrival_date,
+    validate_city_country,
+    validate_seat_or_row,
 )
 
 
@@ -428,13 +430,13 @@ class TicketSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         data = super(TicketSerializer, self).validate(attrs)
 
-        Ticket.validate_seat_or_row(
+        validate_seat_or_row(
             field_name="row",
             seat_or_row=attrs["row"],
             seats_or_rows=attrs["flight"].airplane.rows,
             error_to_raise=serializers.ValidationError
         )
-        Ticket.validate_seat_or_row(
+        validate_seat_or_row(
             field_name="seat",
             seat_or_row=attrs["seat"],
             seats_or_rows=attrs["flight"].airplane.seats_in_row,

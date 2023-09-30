@@ -1,17 +1,7 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from pycountry import countries
 
-from airport.validators import (
-    validate_name,
-    validate_airplane,
-    validate_date,
-    validate_date_is_not_equal,
-    validate_source_and_destination_is_not_equal,
-    validate_airport_name,
-    validate_departure_arrival_date, validate_city_country
-)
 from user.models import User
 
 
@@ -37,23 +27,10 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.name = self.name.title().strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class City(models.Model):
@@ -72,31 +49,10 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
-    def clean(self):
-        validate_name(name=self.name, error_to_raise=ValidationError)
-        validate_city_country(
-            city=self.name,
-            country=self.country.name,
-            error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.name = self.name.strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class Airport(models.Model):
@@ -107,33 +63,17 @@ class Airport(models.Model):
         on_delete=models.CASCADE
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         unique_together = ("name", "closest_big_city")
         ordering = ["name"]
 
-    def clean(self):
-        validate_airport_name(name=self.name, error_to_raise=ValidationError)
+    def __str__(self):
+        return self.name
 
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.name = self.name.title().strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class Route(models.Model):
@@ -164,29 +104,6 @@ class Route(models.Model):
             f"{self.source} - {self.destination}"
         )
 
-    def clean(self):
-        validate_source_and_destination_is_not_equal(
-            source_id=self.source.id,
-            destination_id=self.destination.id,
-            error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
-
 
 class AirplaneType(models.Model):
     name = models.CharField(unique=True, max_length=63)
@@ -197,26 +114,10 @@ class AirplaneType(models.Model):
     def __str__(self):
         return self.name
 
-    def clean(self):
-        validate_airplane(name=self.name, error_to_raise=ValidationError)
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.name = self.name.strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class Airplane(models.Model):
@@ -242,28 +143,10 @@ class Airplane(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def clean(self):
-        validate_airplane(
-            name=self.name, error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.name = self.name.strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class Crew(models.Model):
@@ -281,36 +164,11 @@ class Crew(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
-    def clean(self):
-        validate_name(
-            field_name="first_name",
-            name=self.first_name,
-            error_to_raise=ValidationError
-        )
-        validate_name(
-            field_name="last_name",
-            name=self.last_name,
-            error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
+    def save(self, *args, **kwargs):
         self.first_name = self.first_name.title().strip()
         self.last_name = self.last_name.title().strip()
 
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
+        return super().save(*args, **kwargs)
 
 
 class Flight(models.Model):
@@ -349,46 +207,6 @@ class Flight(models.Model):
     def __str__(self) -> str:
         return f"{self.route} ({self.departure_time})"
 
-    def clean(self):
-        validate_date(
-            field_name="departure_time",
-            date=self.departure_time,
-            error_to_raise=ValidationError
-        )
-        validate_date(
-            field_name="arrival_time",
-            date=self.arrival_time,
-            error_to_raise=ValidationError
-        )
-        validate_date_is_not_equal(
-            first_date_field_name="departure_time",
-            second_date_field_name="arrival_time",
-            first_date=self.departure_time,
-            second_date=self.arrival_time,
-            error_to_raise=ValidationError
-        )
-        validate_departure_arrival_date(
-            departure_time=self.departure_time,
-            arrival_time=self.arrival_time,
-            error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )
-
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -418,47 +236,3 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"Ticket: row {self.row}, seat {self.seat}"
-
-    @staticmethod
-    def validate_seat_or_row(
-            field_name: str,
-            seat_or_row: int,
-            seats_or_rows: int,
-            error_to_raise
-    ):
-        if seat_or_row > seats_or_rows:
-            raise error_to_raise({
-                f"{field_name}":
-                    f"{seat_or_row} must be "
-                    f"in range (1, {seats_or_rows})"
-            })
-
-    def clean(self):
-        Ticket.validate_seat_or_row(
-            field_name="row",
-            seat_or_row=self.row,
-            seats_or_rows=self.flight.airplane.rows,
-            error_to_raise=ValidationError
-        )
-        Ticket.validate_seat_or_row(
-            field_name="seat",
-            seat_or_row=self.seat,
-            seats_or_rows=self.flight.airplane.seats_in_row,
-            error_to_raise=ValidationError
-        )
-
-    def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None
-    ):
-        self.full_clean()
-
-        return super().save(
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-        )

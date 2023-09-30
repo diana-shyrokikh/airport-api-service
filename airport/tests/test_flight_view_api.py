@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -99,18 +99,12 @@ class AuthenticatedFlightApiTests(TestCase):
         ]
 
         self.departure_time_list = [
-            datetime(
-                2023, 8, 17 + i, 18, 0,
-                tzinfo=timezone.utc
-            )
-            for i in range(2)
+            datetime.now(tz=timezone.utc) + timedelta(hours=2),
+            datetime.now(tz=timezone.utc) + timedelta(hours=3),
         ]
         self.arrival_time_list = [
-            datetime(
-                2023, 8, 17 + i, 20, 0,
-                tzinfo=timezone.utc
-            )
-            for i in range(2)
+            datetime.now(tz=timezone.utc) + timedelta(hours=6),
+            datetime.now(tz=timezone.utc) + timedelta(hours=7),
         ]
 
         flights = [
@@ -321,7 +315,7 @@ class AuthenticatedFlightApiTests(TestCase):
         self.assertEqual(request.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class AdminMovieApiTests(TestCase):
+class AdminApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin = get_user_model().objects.create_user(
@@ -380,15 +374,15 @@ class AdminMovieApiTests(TestCase):
             for letter in "abcde"
         ]
 
-        self.departure_time = "2023-08-17 18:00"
-        self.arrival_time = "2023-08-17 20:00"
+        self.departure_time = datetime.now(tz=timezone.utc) + timedelta(hours=2)
+        self.arrival_time = datetime.now(tz=timezone.utc) + timedelta(hours=6)
 
     def test_create_flight(self):
         payload = {
             "route": self.route.id,
             "airplane": self.airplane.id,
-            "departure_time": self.departure_time,
-            "arrival_time": self.arrival_time,
+            "departure_time": self.departure_time.strftime("%Y-%m-%d %H:%M"),
+            "arrival_time": self.arrival_time.strftime("%Y-%m-%d %H:%M"),
         }
 
         request = self.client.post(FLIGHT_URL, payload)
@@ -459,14 +453,8 @@ class AdminMovieApiTests(TestCase):
         flight = Flight.objects.create(
             route=self.route,
             airplane=self.airplane,
-            departure_time=datetime(
-                2023, 8, 17, 18, 0,
-                tzinfo=timezone.utc
-            ),
-            arrival_time=datetime(
-                2023, 8, 17, 20, 0,
-                tzinfo=timezone.utc
-            )
+            departure_time=datetime.now(tz=timezone.utc) + timedelta(hours=2),
+            arrival_time=datetime.now(tz=timezone.utc) + timedelta(hours=6),
         )
 
         url = detail_url(flight.id)
