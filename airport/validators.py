@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.utils import timezone
 
-from airport.is_city_exist import get_country
+from airport.helper import WeatherAPI
 
 NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s]+$"
 AIRPORT_NAME_PATTERN = r"^(?=.*[a-zA-Z])[a-zA-Z\s.()-/]+$"
@@ -15,7 +15,9 @@ def validate_city_country(
         country: str,
         error_to_raise
 ):
-    country_name = get_country(city)
+    weather_api = WeatherAPI()
+    country_name = weather_api.get_country(city)
+
     if country_name == "error":
         raise error_to_raise({
             "name": "The city doesn't exist"
@@ -113,4 +115,18 @@ def validate_departure_arrival_date(
         raise error_to_raise({
             "departure_time":
                 "departure time should not be later than arrival time",
+        })
+
+
+def validate_seat_or_row(
+        field_name: str,
+        seat_or_row: int,
+        seats_or_rows: int,
+        error_to_raise
+):
+    if seat_or_row > seats_or_rows:
+        raise error_to_raise({
+            f"{field_name}":
+                f"{seat_or_row} must be "
+                f"in range (1, {seats_or_rows})"
         })
