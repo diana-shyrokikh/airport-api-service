@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
-from airport.get_ids import get_ids
+from airport.helper import get_ids
 from airport.models import (
     Country,
     City,
@@ -195,7 +195,7 @@ class AirportView(
 
         if country_ids:
             country_ids = get_ids(country_ids)
-            queryset = queryset.filter(country__in=country_ids)
+            queryset = queryset.filter(closest_big_city__country__in=country_ids)
 
         if city_ids:
             city_ids = get_ids(city_ids)
