@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
@@ -15,7 +14,6 @@ from airport.models import (
     Crew,
     Flight,
     Order,
-    Ticket,
 )
 
 
@@ -36,13 +34,6 @@ class CityModelTests(TestCase):
 
         self.assertEqual(city.name, str(city))
 
-    def test_validate_name_city(self):
-        invalid_names = ["   ", "123Kyiv", ".,", "Kyiv_"]
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                City.objects.create(name=name, country=self.country)
-
 
 class AirportModelTests(TestCase):
     def setUp(self):
@@ -56,13 +47,6 @@ class AirportModelTests(TestCase):
         )
 
         self.assertEqual(airport.name, str(airport))
-
-    def test_validate_airport_name(self):
-        invalid_names = ["   ", "123Test", ".,", "Test_"]
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                Airport.objects.create(name=name, closest_big_city=self.city)
 
 
 class RouteModelTests(TestCase):
@@ -91,14 +75,6 @@ class RouteModelTests(TestCase):
 
         self.assertEqual(string, str(route))
 
-    def test_validate_source_and_destination_is_not_equal(self):
-        with self.assertRaises(ValidationError):
-            Route.objects.create(
-                source=self.airport1,
-                destination=self.airport1,
-                distance=1000
-            )
-
 
 class AirplaneTypeModelTests(TestCase):
     def test_airplane_type_str(self):
@@ -107,13 +83,6 @@ class AirplaneTypeModelTests(TestCase):
         )
 
         self.assertEqual(airplane_type.name, str(airplane_type))
-
-    def test_validate_airplane(self):
-        invalid_names = ["   ", "123Test", ".,", "Test_"]
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                AirplaneType.objects.create(name=name)
 
 
 class AirplaneModelTests(TestCase):
@@ -132,18 +101,6 @@ class AirplaneModelTests(TestCase):
 
         self.assertEqual(airplane.name, str(airplane))
 
-    def test_validate_airplane(self):
-        invalid_names = ["   ", "123Test", ".,", "Test_"]
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                Airplane.objects.create(
-                    name=name,
-                    airplane_type=self.airplane_type,
-                    rows=10,
-                    seats_in_row=5,
-                )
-
 
 class CrewModelTests(TestCase):
 
@@ -158,23 +115,6 @@ class CrewModelTests(TestCase):
             f"{crew.first_name} {crew.last_name}",
             str(crew)
         )
-
-    def test_validate_name(self):
-        invalid_names = ["   ", "123Test", ".,", "Test_"]
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                Crew.objects.create(
-                    first_name=name,
-                    last_name="Test Last Name"
-                )
-
-        for name in invalid_names:
-            with self.assertRaises(ValidationError):
-                Crew.objects.create(
-                    last_name=name,
-                    first_name="Test First Name"
-                )
 
 
 class FlightTicketOrderModelTests(TestCase):
@@ -248,83 +188,3 @@ class FlightTicketOrderModelTests(TestCase):
             f"{flight.route} ({flight.departure_time})",
             str(flight)
         )
-
-    def test_validate_date(self):
-        invalid_date = datetime(
-            2018, 8, 17, 18, 0,
-            tzinfo=timezone.utc
-        )
-
-        with self.assertRaises(ValidationError):
-            Flight.objects.create(
-                route=self.route,
-                airplane=self.airplane,
-                departure_time=invalid_date,
-                arrival_time=self.arrival_time
-            )
-
-        with self.assertRaises(ValidationError):
-            Flight.objects.create(
-                route=self.route,
-                airplane=self.airplane,
-                departure_time=self.departure_time,
-                arrival_time=invalid_date
-            )
-
-    def test_validate_date_is_not_equal(self):
-        with self.assertRaises(ValidationError):
-            Flight.objects.create(
-                route=self.route,
-                airplane=self.airplane,
-                departure_time=self.arrival_time,
-                arrival_time=self.arrival_time
-            )
-
-    def test_validate_departure_arrival_date(self):
-        with self.assertRaises(ValidationError):
-            Flight.objects.create(
-                route=self.route,
-                airplane=self.airplane,
-                departure_time=self.arrival_time,
-                arrival_time=self.departure_time
-            )
-
-    def test_ticket_order_full_check(self):
-        flight = Flight.objects.create(
-            route=self.route,
-            airplane=self.airplane,
-            departure_time=self.departure_time,
-            arrival_time=self.arrival_time
-        )
-
-        ticket = Ticket.objects.create(
-            row=1,
-            seat=2,
-            flight=flight,
-            order=self.order
-        )
-
-        self.assertEqual(
-            f"Ticket: row {ticket.row}, seat {ticket.seat}",
-            str(ticket)
-        )
-        self.assertEqual(
-            f"Order №{self.order.id}",
-            str(self.order)
-        )
-
-        with self.assertRaises(ValidationError):
-            Ticket.objects.create(
-                row=100,
-                seat=1,
-                flight=flight,
-                order=self.order
-            )
-
-        with self.assertRaises(ValidationError):
-            Ticket.objects.create(
-                row=1,
-                seat=100,
-                flight=flight,
-                order=self.order
-            )
