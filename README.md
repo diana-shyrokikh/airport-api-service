@@ -74,8 +74,8 @@ Any service information can only be deleted from the admin page
 
 ## Technologies
 
-- [Django Official Documentation](https://docs.djangoproject.com/)
-<br>Django is a high-level Python Web framework. In this project, it's used to create the backend service. This service builds the Django application and exposes it on port 8000.
+- [Django Rest Framework Official Documentation](https://www.django-rest-framework.org/)
+<br>Django Rest Framework is a powerful and flexible toolkit for building Web APIs. In this project, it's used to create the backend service. This service builds the Django application and exposes it on port 8000.
 
 
 - [Postgres Official Documentation](https://www.postgresql.org/docs/)
